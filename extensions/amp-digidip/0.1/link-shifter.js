@@ -85,7 +85,7 @@ export class LinkShifter {
       return;
     }
 
-    this.setDigidipUrl_(htmlElement);
+    this.setTrackingUrl_(htmlElement);
   }
 
   /**
@@ -221,7 +221,7 @@ export class LinkShifter {
 
     if (this.digidipOpts_.hostsIgnore.length > 0) {
       const targetTest = new RegExp(
-          '(' + this.digidipOpts_.hostsIgnore.replace(/[\.]/g, '\\$&').replace(/'/g, "''") + ')$',
+          '(' + this.digidipOpts_.hostsIgnore.join('|').replace(/[\.]/g, '\\$&').replace(/'/g, "''") + ')$',
           'i');
       if (targetTest.test(targetHost)) {
         return true;
@@ -232,12 +232,13 @@ export class LinkShifter {
   }
 
   /**
-   * set the digidip tracking link
+   *
    * @param {!Node} htmlElement
+   * @return {string}
    */
-  setDigidipUrl_(htmlElement) {
-    const oldValHref = htmlElement['href'];
+  setTrackingUrl_(htmlElement) {
 
+    const oldValHref = htmlElement['href'];
 
     this.viewer_.getReferrerUrl().then(referrerUrl => {
       const urlParams = {
@@ -245,7 +246,7 @@ export class LinkShifter {
         currUrl: this.viewer_.getResolvedViewerUrl(),
       };
 
-      htmlElement.href = this.getDigidipUrl(htmlElement, urlParams);
+      htmlElement.href = this.getTrackingUrl(htmlElement, urlParams);
 
       // If the link has been "activated" via contextmenu,
       // we have to keep the shifting in mind
@@ -269,7 +270,8 @@ export class LinkShifter {
    * @param {!Object} urlParams
    * @return {string}
    */
-  getDigidipUrl(htmlElement, urlParams) {
+  getTrackingUrl(htmlElement, urlParams) {
+
     return this.getUrlVisit_() +
         encodeURIComponent(htmlElement.href) +
         (htmlElement.rev ?

@@ -41,6 +41,7 @@ export class AmpDigidip extends AMP.BaseElement {
 
   /** @override */
   buildCallback() {
+
     this.ampDoc_ = this.getAmpDoc();
     this.viewer_ = Services.viewerForDoc(this.ampDoc_);
 

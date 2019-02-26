@@ -34,7 +34,8 @@ export function getDigidipOptions(element) {
 
   return {
     rewritePattern: config.rewritePattern,
-    hostsIgnore: hasOwn(config, 'ignoreHosts') ? config['ignoreHosts'] : '',
+    hostsIgnore: hasOwn(config, 'ignoreHosts') ?
+      config['ignoreHosts'] : undefined,
     elementClickhandler: hasOwn(config, 'include') &&
       hasOwn(config['include'], 'value') ? config['include']['value'] : '',
     elementClickhandlerAttribute: hasOwn(config, 'include') &&

@@ -22,14 +22,14 @@
             "ignoreHosts": ["youtube.com", "mobile.vodafone.de"],
             "include":
                 {
-                    "attribute": "id",
-                    "value": "comments"
+                    "attribute": "class",
+                    "value": "track"
                 },
             "exclude": {
                 "attribute": "rel",
                 "value": "skip"
             },
-            "checkIfAnchorPartOfExcludeSection": true
+            "checkIfAnchorPartOfExcludeSection": false
         }
     </script>
 
@@ -37,7 +37,7 @@
 
 <p>Example of merchants links shifting</p>
 <div>
-    <div>
+    <div class="track">
         <a href="https://www.amazon.de/Paulaner-Wei%C3%9Fbier-Oktoberfestbier-Ma%C3%9Fkrug-vol/dp/B005HIMJ7W/ref=sr_1_fkmr1_1?ie=UTF8&qid=1542186734&sr=8-1-fkmr1&keywords=Paulaner+1+liter+Bierdose">
             link to amazon (test digidip redirection)
         </a>
