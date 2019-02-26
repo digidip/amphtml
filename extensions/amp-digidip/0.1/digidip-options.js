@@ -17,7 +17,7 @@ import {getChildJsonConfig} from '../../../src/json';
 import {userAssert} from '../../../src/log';
 
 const errors = {
-  REQUIRED_PUB_ID: 'attribute publisher-id is required',
+  REQUIRED_REWRITE_PATTERN: 'rewrite pattern property is required',
 };
 
 /**
@@ -27,23 +27,27 @@ const errors = {
 export function getDigidipOptions(element) {
 
   const config = getChildJsonConfig(element);
+
+  enforceDigipOptions(config['rewritePattern'],
+      errors.REQUIRED_REWRITE_PATTERN);
+
   console.log(config);
 
+
   return {
-    publisherId: getPublisherId(element),
-    urlWorddipWords: element.getAttribute('url-worddip-words'),
-    useWorddip: element.getAttribute('use-worddip'),
-    newTab: element.getAttribute('new-tab'),
-    encodedXhrCredentials: element.getAttribute('encoded-xhr-credentials'),
-    hostsIgnore: element.getAttribute('hosts-ignore'),
-    readingWordsExclude: element.getAttribute('reading-words-exclude'),
-    elementClickhandler: element.getAttribute('element-clickhandler'),
-    elementClickhandlerAttribute: element.getAttribute(
-        'element-clickhandler-attribute'),
-    elementIgnoreAttribute: element.getAttribute('element-ignore-attribute'),
-    elementIgnorePattern: element.getAttribute('element-ignore-pattern'),
-    elementIgnoreConsiderParents: element.getAttribute(
-        'element-ignore-consider-parents'),
+    rewritePattern: config.rewritePattern,
+    hostsIgnore: config.hasOwn('ignoreHosts') ? config['ignoreHosts'] : '',
+    elementClickhandler: config.hasOwn('include') &&
+    config['include'].hasOwn('value') ? config['include']['value'] : '',
+    elementClickhandlerAttribute: config.hasOwn('include') &&
+    config['include'].hasOwn('attribute') ? config['include']['attribute'] : '',
+    elementIgnoreAttribute: config.hasOwn('exclude') &&
+    config['exclude'].hasOwn('attribute') ? config['exclude']['attribute'] : '',
+    elementIgnorePattern: config.hasOwn('exclude') &&
+    config['exclude'].hasOwn('value') ? config['exclude']['value'] : '',
+    elementIgnoreConsiderParents:
+      config.hasOwn('checkIfAnchorPartOfExcludeSection') ?
+        config['checkIfAnchorPartOfExcludeSection'] : false,
   };
 }
 
@@ -54,19 +58,8 @@ export function getDigidipOptions(element) {
 function enforceDigipOptions(condition, message) {
   userAssert(
       condition,
-      `<amp-digidip> something is wrong with option: ${message}`
+      `There is something wrong with your config: ${message}`
   );
 }
 
-/**
- * @param {!Element} element
- * @return {string}
- */
-function getPublisherId(element) {
-  const publisherId = element.getAttribute('publisher-id');
-
-  enforceDigipOptions(publisherId, errors.REQUIRED_PUB_ID);
-
-  return publisherId;
-}
 
