@@ -15,6 +15,7 @@
  */
 import {getChildJsonConfig} from '../../../src/json';
 import {userAssert} from '../../../src/log';
+import {hasOwn} from '../../../src/utils/object';
 
 const errors = {
   REQUIRED_REWRITE_PATTERN: 'rewrite pattern property is required',
@@ -31,22 +32,21 @@ export function getDigidipOptions(element) {
   enforceDigipOptions(config['rewritePattern'],
       errors.REQUIRED_REWRITE_PATTERN);
 
-  console.log(config);
-
-
   return {
     rewritePattern: config.rewritePattern,
-    hostsIgnore: config.hasOwn('ignoreHosts') ? config['ignoreHosts'] : '',
-    elementClickhandler: config.hasOwn('include') &&
-    config['include'].hasOwn('value') ? config['include']['value'] : '',
-    elementClickhandlerAttribute: config.hasOwn('include') &&
-    config['include'].hasOwn('attribute') ? config['include']['attribute'] : '',
-    elementIgnoreAttribute: config.hasOwn('exclude') &&
-    config['exclude'].hasOwn('attribute') ? config['exclude']['attribute'] : '',
-    elementIgnorePattern: config.hasOwn('exclude') &&
-    config['exclude'].hasOwn('value') ? config['exclude']['value'] : '',
+    hostsIgnore: hasOwn(config, 'ignoreHosts') ? config['ignoreHosts'] : '',
+    elementClickhandler: hasOwn(config, 'include') &&
+      hasOwn(config['include'], 'value') ? config['include']['value'] : '',
+    elementClickhandlerAttribute: hasOwn(config, 'include') &&
+      hasOwn(config['include'], 'attribute') ?
+      config['include']['attribute'] : '',
+    elementIgnoreAttribute: hasOwn(config, 'exclude') &&
+      hasOwn(config['exclude'], 'attribute') ?
+      config['exclude']['attribute'] : '',
+    elementIgnorePattern: hasOwn(config, 'exclude') &&
+      hasOwn(config['exclude'], 'value') ? config['exclude']['value'] : '',
     elementIgnoreConsiderParents:
-      config.hasOwn('checkIfAnchorPartOfExcludeSection') ?
+      hasOwn(config, 'checkIfAnchorPartOfExcludeSection') ?
         config['checkIfAnchorPartOfExcludeSection'] : false,
   };
 }
