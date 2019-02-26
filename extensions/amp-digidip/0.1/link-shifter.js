@@ -272,6 +272,13 @@ export class LinkShifter {
    */
   getTrackingUrl(htmlElement, urlParams) {
 
+    return this.digidipOpts_.rewritePattern.replace('{{valHref}}',
+        encodeURIComponent(htmlElement.href)).replace('{{valRev}}',
+        encodeURIComponent(htmlElement.rev)).replace('{{valReferer}}',
+        encodeURIComponent(htmlElement.ppRef)).replace('{{valCurrUrl}}',
+        encodeURIComponent(urlParams.currUrl));
+
+/*
     return this.getUrlVisit_() +
         encodeURIComponent(htmlElement.href) +
         (htmlElement.rev ?
@@ -286,15 +293,7 @@ export class LinkShifter {
         ) +
         (urlParams.currUrl ?
           ('&currurl=' + encodeURIComponent(urlParams.currUrl)) : ''
-        );
+        );*/
   }
 
-  /**
-   * @return {string}
-   * @private
-   */
-  getUrlVisit_() {
-    return 'http://' + this.digidipOpts_.publisherId +
-        '.digidip.net/visit?url=';
-  }
 }
