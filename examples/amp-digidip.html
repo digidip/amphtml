@@ -20,23 +20,19 @@
         {
             "rewritePattern": "https://visit.digidip.net?pid=110&url={{href}}",
             "ignoreHosts": ["youtube.com", "mobile.vodafone.de"],
-            "include": [
+            "include":
                 {
                     "attribute": "id",
                     "value": "comments"
                 },
-                {
-                    "attribute": "class",
-                    "value": "sidebar"
-                }
-            ],
             "exclude": {
                 "attribute": "rel",
-                "value": "skip",
-                "scanParents": false
-            }
+                "value": "skip"
+            },
+            "checkIfAnchorPartOfExcludeSection": true
         }
     </script>
+
 </amp-digidip>
 
 <p>Example of merchants links shifting</p>
