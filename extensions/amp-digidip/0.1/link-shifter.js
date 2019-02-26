@@ -237,7 +237,7 @@ export class LinkShifter {
    */
   setDigidipUrl_(htmlElement) {
     const oldValHref = htmlElement['href'];
-    const oldValTarget = htmlElement['target'];
+
 
     this.viewer_.getReferrerUrl().then(referrerUrl => {
       const urlParams = {
@@ -247,10 +247,6 @@ export class LinkShifter {
 
       htmlElement.href = this.getDigidipUrl(htmlElement, urlParams);
 
-      if (this.digidipOpts_.newTab === '1') {
-        htmlElement.target = '_blank';
-      }
-
       // If the link has been "activated" via contextmenu,
       // we have to keep the shifting in mind
       if (this.event_.type === 'contextmenu') {
@@ -259,12 +255,6 @@ export class LinkShifter {
 
       this.viewer_.win.setTimeout(() => {
         htmlElement.href = oldValHref;
-
-        if (oldValTarget === '') {
-          htmlElement.removeAttribute('target');
-        } else {
-          htmlElement.target = oldValTarget;
-        }
 
         if (htmlElement.hasAttribute(CTX_ATTR_NAME)) {
           htmlElement.removeAttribute(CTX_ATTR_NAME);
