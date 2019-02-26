@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {getChildJsonConfig} from '../../../src/json';
 import {userAssert} from '../../../src/log';
 
 const errors = {
@@ -25,8 +26,8 @@ const errors = {
  */
 export function getDigidipOptions(element) {
 
-
-  console.log(element);
+  const config = getChildJsonConfig(element);
+  console.log(config);
 
   return {
     publisherId: getPublisherId(element),
