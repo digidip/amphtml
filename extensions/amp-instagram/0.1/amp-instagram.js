@@ -70,7 +70,7 @@ class AmpInstagram extends AMP.BaseElement {
     */
     this.iframePromise_ = null;
   }
-  /**
+  /*
   * @param {boolean=} opt_onLayout
   * @override
   */

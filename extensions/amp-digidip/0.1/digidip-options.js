@@ -24,6 +24,10 @@ const errors = {
  * @return {!Object}
  */
 export function getDigidipOptions(element) {
+
+
+  console.log(element);
+
   return {
     publisherId: getPublisherId(element),
     urlWorddipWords: element.getAttribute('url-worddip-words'),
