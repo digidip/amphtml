@@ -15,7 +15,7 @@
  */
 
 import {CTX_ATTR_NAME, CTX_ATTR_VALUE} from './constants';
-import {getDigidipOptions} from './digidip-options';
+import {getConfigOpts} from './config-options';
 
 export class LinkShifter {
   /**
@@ -34,7 +34,7 @@ export class LinkShifter {
     this.event_ = null;
 
     /** @private {?Object} */
-    this.digidipOpts_ = getDigidipOptions(ampElement);
+    this.configOpts_ = getConfigOpts(ampElement);
 
     /** @private {?RegExp} */
     this.regexDomainUrl_ = /^https?:\/\/(www\.)?([^\/:]*)(:\d+)?(\/.*)?$/;
@@ -69,7 +69,7 @@ export class LinkShifter {
 
     // check if there is a ignore_attribute and and ignore_pattern defined
     // and check if the current element or it's parent has it
-    if (this.checkIsIgnore_(htmlElement)) {
+    if (this.testAttributes_(htmlElement)) {
       return;
     }
 
@@ -89,20 +89,39 @@ export class LinkShifter {
   }
 
   /**
-   * Check if the anchor element is placed in a section that
-   * has being mark to ignore the anchors inside
+   * Match attributes of the anchor if have been defined in config
+   * compare every attribute defined in config as regex with its
+   * corresponding value of the anchor element attribute
    * @param {!Node} htmlElement
    */
-  checkIsIgnore_(htmlElement) {
-    const isIgnore = Boolean(
-        this.digidipOpts_.elementIgnoreAttribute !== '' &&
-        this.digidipOpts_.elementIgnorePattern !== '');
+  testAttributes_(htmlElement) {
+    const anchorAttr = this.configOpts_.attribute;
+    const attrKeys = Object.keys(anchorAttr);
+    let test = true;
 
-    if (!isIgnore) {
-      return false;
+    if (attrKeys.length === 0) {
+      return true;
     }
 
-    if (this.digidipOpts_.elementIgnoreConsiderParents === '1') {
+    attrKeys.forEach(key => {
+      const value = anchorAttr[key];
+      const reg = new RegExp(value);
+      const htmlElement = htmlElement.get();
+
+
+      console.log('reg', reg);
+      console.log('key', key);
+      console.log('value', anchorAttr[key]);
+      console.log('htmlElement[key]', htmlElement[key]);
+      console.log('htmlElement', htmlElement);
+      console.log('htmlElement[\'class\']', htmlElement['class']);
+      console.log('reg.test(htmlElement[key])', reg.test(htmlElement[key]));
+      return test = test && reg.test(htmlElement[key]);
+    });
+
+    console.log('test', test);
+
+    if (this.configOpts_.elementIgnoreConsiderParents === '1') {
       const rootNode = htmlElement.getRootNode();
       let parentSearch = htmlElement;
 
@@ -120,14 +139,14 @@ export class LinkShifter {
       }
     }
 
-    if (this.digidipOpts_.elementClickhandler !== '') {
+    if (this.configOpts_.elementClickhandler !== '') {
       // Note: Normally, this should not be necessary, because during the init
       // phase, we only subscribe to the events of the defined
       // element_clickhandler, but we had cases where the
       // respective element was not available at this
       // time. So following code is only for the 1% where
       // it doesn't work. :-(
-      const selector = '#' + this.digidipOpts_.elementClickhandler;
+      const selector = '#' + this.configOpts_.elementClickhandler;
       const elmTmpRootNode = htmlElement.getRootNode()
           .querySelectorAll(selector);
 
@@ -163,12 +182,12 @@ export class LinkShifter {
   hasPassCondition_(htmlElement) {
     let attributeValue = null;
 
-    if (htmlElement.hasAttribute(this.digidipOpts_.elementIgnoreAttribute)) {
+    if (htmlElement.hasAttribute(this.configOpts_.elementIgnoreAttribute)) {
       attributeValue = htmlElement.getAttribute(
-          this.digidipOpts_.elementIgnoreAttribute);
+          this.configOpts_.elementIgnoreAttribute);
 
       const searchAttr = attributeValue.search(
-          this.digidipOpts_.elementIgnorePattern);
+          this.configOpts_.elementIgnorePattern);
 
       if (searchAttr !== -1) {
         return true;
@@ -219,9 +238,9 @@ export class LinkShifter {
     this.regexDomainUrl_.test(href);
     const targetHost = RegExp.$2;
 
-    if (this.digidipOpts_.hostsIgnore.length > 0) {
+    if (this.configOpts_.hostsIgnore.length > 0) {
       const targetTest = new RegExp(
-          '(' + this.digidipOpts_.hostsIgnore.join('|').replace(/[\.]/g, '\\$&').replace(/'/g, "''") + ')$',
+          '(' + this.configOpts_.hostsIgnore.join('|').replace(/[\.]/g, '\\$&').replace(/'/g, "''") + ')$',
           'i');
       if (targetTest.test(targetHost)) {
         return true;
@@ -272,7 +291,7 @@ export class LinkShifter {
    */
   getTrackingUrl(htmlElement, urlParams) {
 
-    return this.digidipOpts_.rewritePattern.replace('{{valHref}}',
+    return this.configOpts_.rewritePattern.replace('{{valHref}}',
         encodeURIComponent(htmlElement.href)).replace('{{valRev}}',
         encodeURIComponent(htmlElement.rev)).replace('{{valReferer}}',
         encodeURIComponent(htmlElement.ppRef)).replace('{{valCurrUrl}}',

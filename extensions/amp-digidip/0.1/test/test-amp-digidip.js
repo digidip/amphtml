@@ -15,7 +15,7 @@
  */
 
 import * as DocumentReady from '../../../../src/document-ready';
-import * as digidipOptionsModule from '../digidip-options';
+import * as digidipOptionsModule from '../config-options';
 import helpersMaker from './test-helpers';
 
 describes.fakeWin('amp-digidip', {

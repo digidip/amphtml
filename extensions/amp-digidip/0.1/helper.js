@@ -18,58 +18,19 @@
 /**
  *
  * @param {?../../../src/service/ampdoc-impl.AmpDoc} ampDoc
- * @param {!Object}  digidipOpts
+ * @param {!Object}  configOpts
  * @return {*}
  */
-export function getScopeElements(ampDoc, digidipOpts) {
+export function getScopeElements(ampDoc, configOpts) {
 
   const doc = ampDoc.getRootNode();
+  let cssSelector = configOpts.section.join(' a, ');
+  let selection = doc.querySelectorAll('a');
 
-  let scope = '';
-
-  let scopeElements = doc.querySelectorAll('*');
-
-  if (digidipOpts.elementClickhandlerAttribute !== '' &&
-      digidipOpts.elementClickhandler !== ''
-  ) {
-
-    if (digidipOpts.elementClickhandlerAttribute === 'id') {
-
-      scope = '#' + digidipOpts.elementClickhandler;
-
-      scopeElements = doc.querySelectorAll(scope);
-
-    } else if (digidipOpts.elementClickhandlerAttribute === 'class') {
-
-      scope = '.' + digidipOpts.elementClickhandler;
-
-      let classElements = doc.querySelectorAll(scope);
-
-      classElements = Object.keys(classElements).map(key => {
-
-        return classElements[key];
-      });
-
-      if (classElements.length > 0) {
-
-        classElements = classElements.filter(item => {
-
-          for (const i in classElements) {
-
-            if (classElements[i].contains(item) && classElements[i] !== item) {
-
-              return false;
-            }
-          }
-
-          return true;
-        });
-
-        scopeElements = classElements;
-
-      }
-    }
+  if (configOpts.section.length !== 0) {
+    cssSelector = cssSelector + ' a';
+    selection = doc.querySelectorAll(cssSelector);
   }
 
-  return scopeElements;
+  return selection;
 }

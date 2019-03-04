@@ -16,7 +16,7 @@
 
 import {LinkShifter} from './link-shifter';
 import {Services} from '../../../src/services';
-import {getDigidipOptions} from './digidip-options';
+import {getConfigOpts} from './config-options';
 import {getScopeElements} from './helper';
 
 export class AmpDigidip extends AMP.BaseElement {
@@ -35,7 +35,7 @@ export class AmpDigidip extends AMP.BaseElement {
     this.shifter_ = null;
 
     /** @private {?Object} */
-    this.digidipOpts_ = {};
+    this.configOpts_ = {};
 
   }
 
@@ -45,7 +45,7 @@ export class AmpDigidip extends AMP.BaseElement {
     this.ampDoc_ = this.getAmpDoc();
     this.viewer_ = Services.viewerForDoc(this.ampDoc_);
 
-    this.digidipOpts_ = getDigidipOptions(this.element);
+    this.configOpts_ = getConfigOpts(this.element);
 
     return this.ampDoc_.whenBodyAvailable()
         .then(() => {
@@ -59,7 +59,7 @@ export class AmpDigidip extends AMP.BaseElement {
   letsRockIt_() {
     const list = getScopeElements(
         this.ampDoc_,
-        this.digidipOpts_);
+        this.configOpts_);
 
     this.shifter_ = new LinkShifter(
         this.element,
