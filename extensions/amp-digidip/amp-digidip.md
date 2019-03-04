@@ -36,12 +36,10 @@ limitations under the License.
 
 Digidip allows you to monetise your content through affiliate marketing. It gives you instant access to over 40,000 merchant affiliate programs without the hassle of network sign ups, approvals or creating affiliate links.
 
-`amp-digidip` is the AMP version of the traditional Digidip scripts which allows you to automatically turn your normal merchant links into monetizable links and gives you access to analytics data about how your content is performing.
-
+In order to allow our publishers to track traffic, and at the same time profit from the power of amp pages, we developed a link-rewrite generic component. `amp-digidip` allows digidip publishers to automatically turn their normal merchant links into monetizable links and access analytics on how their data is performing. As a generic extension for url rewriting, it covers a wide range of needs, that makes it also useful for other type of users.
 
 ## Getting started
 
-A digidip account is required in order to use [amp-digidip](https://digidip.net/)
 
 **Add the required script**
 Inside the `<head>...</head>` section of your AMP page, insert this code before the line `<script async src="https://cdn.ampproject.org/v0.js"></script>`
@@ -57,19 +55,32 @@ Inside the `<body>...</body>` section of your AMP page, insert this code:
 Code:
 ```html
     <amp-digidip
-        layout="nodisplay"
-        publisher-id="<<publisher id>>"
-        hosts-ignore="<<host domains list>>"
-        element-clickhandler-attribute="<<html attribute>>"
-        element-clickhandler="<<html attribute value>>"
-        element-ignore-attribute="<<html element to be ignored when it has a specific value>>"
-        element-ignore-pattern="<<html element value to be ignored >>"
-    >
+        layout="nodisplay">
+        
+        <script type="application/json">
+                {
+                    "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
+                    "section": [
+                        "#product-listing-1",
+                        "#product-listing-2",
+                    ],
+                    "attribute": {
+                        "href": "((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*",
+                        "id": "comments",
+                        "class": "sidebar",
+                        "rel": "(?!(skip))*",
+                    },
+                    "vars": {
+                        "customerId": "12345"
+                    }
+                }
+         </script>
+            
     </amp-digidip>
 ```
 
 
-The final code should like:
+The final code should look like:
 
 ```html
 <!doctype html>
@@ -83,32 +94,53 @@ The final code should like:
 <body>
     ...
     <amp-digidip
-        layout="nodisplay"
-        publisher-id="<<publisher id>>"
-        hosts-ignore="<<host domains list>>"
-        element-clickhandler-attribute="<<html attribute>>"
-        element-clickhandler="<<html attribute value>>"
-        element-ignore-attribute="<<html element to be ignored when it has a specific value>>"
-        element-ignore-pattern="<<html element value to be ignored >>"
-    >
+        layout="nodisplay">
+        
+        <script type="application/json">
+                {
+                    "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
+                    "section": [
+                        "#product-listing-1",
+                        "#product-listing-2",
+                    ],
+                    "attribute": {
+                        "href": "((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*",
+                        "id": "comments",
+                        "class": "sidebar",
+                        "rel": "(?!(skip))*",
+                    },
+                    "vars": {
+                        "customerId": "12345"
+                    }
+                }
+         </script>
+            
     </amp-digidip>
     ....
 </body>
 </html>
 ```
 
-## Attributes
+## Json configuration
 
-##### publisher-id (required)
+##### output (required)
 
-The publisher id.
+The "output" property is the redirection url plus a query string of placeholders values that will be shifted with values defined in the config JSON 'vars' property, or in the anchor itself as a data attribute.
 
 Example:
 ```html
     <amp-digidip
-        ...
-        publisher-id="publisher-id-example"
-    >
+        layout="nodisplay">
+        
+        <script type="application/json">
+                {
+                    "output": "https://visit.digidip.net?pid=110&cid=${vars.customerId}",
+                    "vars": {
+                        "customerId": "12345"
+                    }
+                }
+         </script>
+            
     </amp-digidip>
 ```
 

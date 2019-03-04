@@ -18,32 +18,34 @@
 <amp-digidip layout="nodisplay">
     <script type="application/json">
         {
-            "rewritePattern": "https://visit.digidip.net?pid=110&url={{valHref}}&ref={{valRev}}&&ppref={{valReferer}}",
-            "ignoreHosts": ["youtube.com", "mobile.vodafone.de"],
-            "include":
-                {
-                    "attribute": "class",
-                    "value": "track"
-                },
-            "exclude": {
-                "attribute": "rel",
-                "value": "skip"
+            "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
+            "section": [
+                "#product-listing-1",
+                "#product-listing-2",
+            ],
+            "attribute": {
+                "href": "((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*",
+                "id": "comments",
+                "class": "sidebar",
+                "rel": "(?!(skip))*",
             },
-            "checkIfAnchorPartOfExcludeSection": false
+            "vars": {
+                "customerId": "12345"
+            }
         }
     </script>
 
 </amp-digidip>
 
 <p>Example of merchants links shifting</p>
-<div>
-    <div class="track">
+<div id="product-listing-1">
+    <div>
         <a href="https://www.amazon.de/Paulaner-Wei%C3%9Fbier-Oktoberfestbier-Ma%C3%9Fkrug-vol/dp/B005HIMJ7W/ref=sr_1_fkmr1_1?ie=UTF8&qid=1542186734&sr=8-1-fkmr1&keywords=Paulaner+1+liter+Bierdose">
             link to amazon (test digidip redirection)
         </a>
     </div>
     <div>
-        <a id="untrack" href="https://www.gearbest.com/pest-control/pp_665269.html?wid=1112942">
+        <a rel="skip" href="https://www.gearbest.com/pest-control/pp_665269.html?wid=1112942">
             link to gear best (without digidip)
         </a>
     </div>
@@ -52,6 +54,11 @@
             Internal Link (should not be trasnformed)
         </a>
     </div>
+</div>
+<div id="comments">
+    <a href="https://amazon.com/books.html">
+        Internal Link (should not be trasnformed)
+    </a>
 </div>
 </body>
 </html>
