@@ -15,30 +15,27 @@
     <script async src="/dist/amp.js"></script>
 </head>
 <body>
-<amp-story>
-    <amp-digidip layout="nodisplay">
-        <script type="application/json">
-            {
-                "output": "https://visit.digidip.net?customerId=${customerId}&url=${href}&ref=${referrer}&locurl=${location}",
-                "section": [
-                    "#track-section"
-                ],
-                "attribute": {
-                    "href": "^((?!(http:\/\/|https:\/\/)?(www\\.)?(youtube\\.com)|(mobile\\.vodafone\\.de)).)+",
-                    "class": "sidebar"
-                },
-                "vars": {
-                    "customerId": "12345"
-                },
-                "allowAttr": {
-
-                },
-                "anchorAtribute": {
-
-                }
+<amp-digidip layout="nodisplay">
+    <script type="application/json">
+        {
+            "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}&ref=${referrer}&location=${location}",
+            "section": [
+                "#product-listing-1",
+                "#product-listing-2",
+            ],
+            "attribute": {
+                "href": "^((?!(http:\/\/|https:\/\/)?(www\\.)?(youtube\\.com)|(mobile\\.vodafone\\.de)).)+",
+                "id": "comments",
+                "class": "sidebar",
+                "rel": "(?!(skip))*",
+            },
+            "vars": {
+                "customerId": "12345"
             }
-        </script>
-    </amp-digidip>
+        }
+    </script>
+
+</amp-digidip>
 
     <!--page 1-->
     <amp-story-page id="page1">

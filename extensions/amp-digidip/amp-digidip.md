@@ -36,12 +36,10 @@ limitations under the License.
 
 Digidip allows you to monetise your content through affiliate marketing. It gives you instant access to over 40,000 merchant affiliate programs without the hassle of network sign ups, approvals or creating affiliate links.
 
-`amp-digidip` is the AMP version of the traditional Digidip scripts which allows you to automatically turn your normal merchant links into monetizable links and gives you access to analytics data about how your content is performing.
-
+In order to allow our publishers to track traffic, and at the same time profit from the power of amp pages, we developed a link-rewrite generic component. `amp-digidip` allows digidip publishers to automatically turn their normal merchant links into monetizable links and access analytics on how their data is performing. As a generic extension for url rewriting, it covers a wide range of needs, that makes it also useful for other type of users.
 
 ## Getting started
 
-A digidip account is required in order to use [amp-digidip](https://digidip.net/)
 
 **Add the required script**
 Inside the `<head>...</head>` section of your AMP page, insert this code before the line `<script async src="https://cdn.ampproject.org/v0.js"></script>`
@@ -57,19 +55,32 @@ Inside the `<body>...</body>` section of your AMP page, insert this code:
 Code:
 ```html
     <amp-digidip
-        layout="nodisplay"
-        publisher-id="<<publisher id>>"
-        hosts-ignore="<<host domains list>>"
-        element-clickhandler-attribute="<<html attribute>>"
-        element-clickhandler="<<html attribute value>>"
-        element-ignore-attribute="<<html element to be ignored when it has a specific value>>"
-        element-ignore-pattern="<<html element value to be ignored >>"
-    >
+        layout="nodisplay">
+        
+        <script type="application/json">
+                {
+                    "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
+                    "section": [
+                        "#product-listing-1",
+                        "#product-listing-2",
+                    ],
+                    "attribute": {
+                        "href": "((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*",
+                        "id": "comments",
+                        "class": "sidebar",
+                        "rel": "(?!(skip))*",
+                    },
+                    "vars": {
+                        "customerId": "12345"
+                    }
+                }
+         </script>
+            
     </amp-digidip>
 ```
 
 
-The final code should like:
+The final code should look like:
 
 ```html
 <!doctype html>
@@ -83,120 +94,126 @@ The final code should like:
 <body>
     ...
     <amp-digidip
-        layout="nodisplay"
-        publisher-id="<<publisher id>>"
-        hosts-ignore="<<host domains list>>"
-        element-clickhandler-attribute="<<html attribute>>"
-        element-clickhandler="<<html attribute value>>"
-        element-ignore-attribute="<<html element to be ignored when it has a specific value>>"
-        element-ignore-pattern="<<html element value to be ignored >>"
-    >
+        layout="nodisplay">
+        
+        <script type="application/json">
+                {
+                    "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
+                    "section": [
+                        "#product-listing-1",
+                        "#product-listing-2",
+                    ],
+                    "attribute": {
+                        "href": "((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*",
+                        "id": "comments",
+                        "class": "sidebar",
+                        "rel": "(?!(skip))*",
+                    },
+                    "vars": {
+                        "customerId": "12345"
+                    }
+                }
+         </script>
+            
     </amp-digidip>
     ....
 </body>
 </html>
 ```
 
-## Attributes
+## Json configuration
 
-##### publisher-id (required)
+##### output (required)
 
-The publisher id.
-
-Example:
-```html
-    <amp-digidip
-        ...
-        publisher-id="publisher-id-example"
-    >
-    </amp-digidip>
-```
-
-##### hosts-ignore (optional)
-
-A pipe (vertical bar) separated list of domain names.
-All the links belonging to a domain in that list will not be affiliated nor tracked by digidip.
-By default amp-digidip does not exclude any domains.
+The "output" property is the redirection url plus a query string of placeholders that will be shifted with values defined in the config JSON 'vars' property, or in the anchor itself as a data attribute.
 
 Example:
 ```html
     <amp-digidip
-        ...
-        hosts-ignore="samsung.com | amazon.com"
-    >
+        layout="nodisplay">
+        
+        <script type="application/json">
+                {
+                    "output": "https://visit.digidip.net?pid=110&cid=${vars.customerId}",
+                    "vars": {
+                        "customerId": "12345"
+                    }
+                }
+         </script>
+            
     </amp-digidip>
 ```
 
-##### element-clickhandler-attribute (optional)
-
-The `element-clickhandler-attribute` allows you to restrict which links amp-digidip
-should affiliate and track. Only the links
-within the area defined by the provided selector and value will considered.
-By default, amp-digidip affiliate and tracks all the links on the page.
-
-The `element-clickhandler-attribute` value should be an `id` or `class` html element attribute.
-
-**WARNING:**
-Don't set this option unless you really need it. When using this option, always double check that your attribute and value is
-matching your links section.
-If you set the `element-clickhandler-attribute` you have to set the value defined by `element-clickhandle`.
-
-Examples:
+We can also define data values in the anchor data attribute as the following example:
 ```html
-    <amp-digidip
-        ...
-        element-clickhandler-attribute="id"
-    >
-    </amp-digidip>
+    <a href="http://amazon.de/644556" data-vars-event-id="231">
 ```
 
-```html
-    <amp-digidip
-        ...
-        element-clickhandler-attribute="class"
-    >
-    </amp-digidip>
+The config could be something like:
+
+```json
+    {
+      "output": "https://visit.digidip.net?pid=110&cid=${vars.customerId}"
+
+    }
+```
+The resulting rewriting url would be:
+```url
+https://visit.digidip.net?pid=110&cid=12345
 ```
 
+Besides defined placeholders that match the data defined in the 'vars' property of the JSON configuration, or as a data attribute, there are other pre-defined placeholders that will be shifted with information such as anchor url, page location, refferer page, or anchor id. The following table shows the relationshsip between defined data and placeholders.
 
-##### element-ignore-attribute (optional)
+| value          | source     |       example                                       |    placeholder       
+| -------------- | ---------- |-------------------------------------------------------|----------------------
+| location       | page       |    'https://publisher.com/43465'                      |  `${location}`        
+| referrer       | page       |    'https://publisher.com'                            |  `${referrer}`        
+| rev            | anchor     |    `<a href="..." rev="author" />`                    |  `${rev}`             
+| id             | anchor     |    `<a href="..." id="link" />`                       |  `${id}`              
+| rev            | anchor     |    `<a href="..." rel="pass" />`                      |  `${rel}`             
+| href           | anchor     |    `<a href="https://vendor.com" />`                  |  `${href}`            
+| rev            | anchor     |    `<a href="..." rev="author" />`                    |  `${rev}`             
+| data-vars-*    | anchor     |    `<a href="..." data-vars-merchant-id="123" />`     |  `${vars.merchantId}` 
+| vars.*         | config     |    `{ "vars": { "publisherId": "123" } }`             |  `${vars.publisherId}`
 
-The `element-ignore-attribute` allows you to restrict which links should be ignored. It
-The `element-ignore-attribute` value is a html element attribute included the following group: `id`, `class`, `rev`, `rel`
 
-**WARNING:**
-If you set the `element-ignore-attribute` you have to set the value defined by `element-ignore-pattern`.
+##### section (optional)
 
+The "section" property defines an array of css selector expressions that filter areas where the url rewriting should operate.
+
+Example:
+```json
+     {
+        "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
+        "section": [
+            "#product-listing-1",
+            "#product-listing-2",
+        ]
+    }
+```
+
+In the previous example, the html sections defined with attribute ID equeal to "product-listing-1" and "product-listing-2" will be considered for url rewriting. 
+
+##### attribute (optional)
+
+The "attribute" property defines a list of rules to match the anchor elements retrieved from the filtered sections. These rules are built from regular expressions associated with html element attributes as "id", "href", "class" or "rel".
 
 Example:
 
-```html
-    <amp-digidip
-        ...
-        element-ignore-attribute="rel"
-        element-ignore-pattern="bypass"
-    >
-    </amp-digidip>
+```json
+     {
+      "section": [
+                 "#product-listing-1"
+             ],
+      "attribute": {
+                        "href": "((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*",
+                        "class": "comments"
+                   }
+    }
 ```
 
-##### element-ignore-pattern (optional)
-
-The `element-ignore-pattern` allows you to define the value for `element-ignore-attribute`.
-
-**WARNING:**
-If you set the `element-ignore-pattern` you have to set the value defined by `element-ignore-attribute`.
-
-
-Example:
-
-```html
-    <amp-digidip
-        ...
-        element-ignore-attribute="rel"
-        element-ignore-pattern="bypass"
-    >
-    </amp-digidip>
-```
+The anchors within the html area with id 'product-listing-1' will have to match the regex expression defined for the attribute href and id.
+In this example, it means that all the anchors with 'youtube.com' and 'mobile.vodafone.de' will be excluded. Also, the included anchors need to have a class attribute with the value 'comments'   
 
 
 ## Validation
