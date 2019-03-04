@@ -31,7 +31,7 @@ export function getConfigOpts(element) {
   enforceConfigOpt(config['output'], errors.REQUIRED_OUTPUT);
 
   return {
-    output: config.output,
+    output: config.output.toString(),
     section: hasOwn(config, 'section') ? config.section : [],
     attribute: hasOwn(config, 'attribute') ? config.attribute : {},
     vars: hasOwn(config, 'vars') ? config.vars : {},

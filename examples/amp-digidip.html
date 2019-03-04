@@ -18,16 +18,13 @@
 <amp-digidip layout="nodisplay">
     <script type="application/json">
         {
-            "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}&ref=${referrer}&location=${location}",
+            "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}&ref=${referrer}&location=${location}&rel=${rel}",
             "section": [
-                "#product-listing-1",
-                "#product-listing-2",
+                "#track-section"
             ],
             "attribute": {
                 "href": "^((?!(http:\/\/|https:\/\/)?(www\\.)?(youtube\\.com)|(mobile\\.vodafone\\.de)).)+",
-                "id": "comments",
-                "class": "sidebar",
-                "rel": "(?!(skip))*",
+                "class": "sidebar"
             },
             "vars": {
                 "customerId": "12345"

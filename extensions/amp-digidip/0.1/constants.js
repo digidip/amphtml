@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 
-export const CTX_ATTR_NAME = 'digidipctx';
+export const CTX_ATTR_NAME = 'shiftedctx';
+
 export const CTX_ATTR_VALUE = () => {
   return Date.now();
 };
 
+/**
+ * White list of anchor attributes allowed to be replace with
+ * placeholders set on output config property
+ */
+export const WL_ANCHOR_ATTR = [
+  'href',
+  'id',
+  'rel',
+  'rev',
+];
