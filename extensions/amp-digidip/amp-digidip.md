@@ -125,7 +125,7 @@ The final code should look like:
 
 ##### output (required)
 
-The "output" property is the redirection url plus a query string of placeholders values that will be shifted with values defined in the config JSON 'vars' property, or in the anchor itself as a data attribute.
+The "output" property is the redirection url plus a query string of placeholders that will be shifted with values defined in the config JSON 'vars' property, or in the anchor itself as a data attribute.
 
 Example:
 ```html
@@ -144,91 +144,76 @@ Example:
     </amp-digidip>
 ```
 
-##### hosts-ignore (optional)
+We can also define data values in the anchor data attribute as the following example:
+```html
+    <a href="http://amazon.de/644556" data-vars-event-id="231">
+```
 
-A pipe (vertical bar) separated list of domain names.
-All the links belonging to a domain in that list will not be affiliated nor tracked by digidip.
-By default amp-digidip does not exclude any domains.
+The config could be something like:
+
+```json
+    {
+      "output": "https://visit.digidip.net?pid=110&cid=${vars.customerId}"
+
+    }
+```
+The resulting rewriting url would be:
+```url
+https://visit.digidip.net?pid=110&cid=12345
+```
+
+Besides defined placeholders that match the data defined in the 'vars' property of the JSON configuration, or as a data attribute, there are other pre-defined placeholders that will be shifted with information such as anchor url, page location, refferer page, or anchor id. The following table shows the relationshsip between defined data and placeholders.
+
+| value          | source     |       example                                       |    placeholder       
+| -------------- | ---------- |-------------------------------------------------------|----------------------
+| location       | page       |    'https://publisher.com/43465'                      |  `${location}`        
+| referrer       | page       |    'https://publisher.com'                            |  `${referrer}`        
+| rev            | anchor     |    `<a href="..." rev="author" />`                    |  `${rev}`             
+| id             | anchor     |    `<a href="..." id="link" />`                       |  `${id}`              
+| rev            | anchor     |    `<a href="..." rel="pass" />`                      |  `${rel}`             
+| href           | anchor     |    `<a href="https://vendor.com" />`                  |  `${href}`            
+| rev            | anchor     |    `<a href="..." rev="author" />`                    |  `${rev}`             
+| data-vars-*    | anchor     |    `<a href="..." data-vars-merchant-id="123" />`     |  `${vars.merchantId}` 
+| vars.*         | config     |    `{ "vars": { "publisherId": "123" } }`             |  `${vars.publisherId}`
+
+
+##### section (optional)
+
+The "section" property defines an array of css selector expressions that filter areas where the url rewriting should operate.
 
 Example:
-```html
-    <amp-digidip
-        ...
-        hosts-ignore="samsung.com | amazon.com"
-    >
-    </amp-digidip>
+```json
+     {
+        "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
+        "section": [
+            "#product-listing-1",
+            "#product-listing-2",
+        ]
+    }
 ```
 
-##### element-clickhandler-attribute (optional)
+In the previous example, the html sections defined with attribute ID equeal to "product-listing-1" and "product-listing-2" will be considered for url rewriting. 
 
-The `element-clickhandler-attribute` allows you to restrict which links amp-digidip
-should affiliate and track. Only the links
-within the area defined by the provided selector and value will considered.
-By default, amp-digidip affiliate and tracks all the links on the page.
+##### attribute (optional)
 
-The `element-clickhandler-attribute` value should be an `id` or `class` html element attribute.
-
-**WARNING:**
-Don't set this option unless you really need it. When using this option, always double check that your attribute and value is
-matching your links section.
-If you set the `element-clickhandler-attribute` you have to set the value defined by `element-clickhandle`.
-
-Examples:
-```html
-    <amp-digidip
-        ...
-        element-clickhandler-attribute="id"
-    >
-    </amp-digidip>
-```
-
-```html
-    <amp-digidip
-        ...
-        element-clickhandler-attribute="class"
-    >
-    </amp-digidip>
-```
-
-
-##### element-ignore-attribute (optional)
-
-The `element-ignore-attribute` allows you to restrict which links should be ignored. It
-The `element-ignore-attribute` value is a html element attribute included the following group: `id`, `class`, `rev`, `rel`
-
-**WARNING:**
-If you set the `element-ignore-attribute` you have to set the value defined by `element-ignore-pattern`.
-
+The "attribute" property defines a list of rules to match the anchor elements retrieved from the filtered sections. These rules are built from regular expressions associated with html element attributes as "id", "href", "class" or "rel".
 
 Example:
 
-```html
-    <amp-digidip
-        ...
-        element-ignore-attribute="rel"
-        element-ignore-pattern="bypass"
-    >
-    </amp-digidip>
+```json
+     {
+      "section": [
+                 "#product-listing-1"
+             ],
+      "attribute": {
+                        "href": "((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*",
+                        "class": "comments"
+                   }
+    }
 ```
 
-##### element-ignore-pattern (optional)
-
-The `element-ignore-pattern` allows you to define the value for `element-ignore-attribute`.
-
-**WARNING:**
-If you set the `element-ignore-pattern` you have to set the value defined by `element-ignore-attribute`.
-
-
-Example:
-
-```html
-    <amp-digidip
-        ...
-        element-ignore-attribute="rel"
-        element-ignore-pattern="bypass"
-    >
-    </amp-digidip>
-```
+The anchors within the html area with id 'product-listing-1' will have to match the regex expression defined for the attribute href and id.
+In this example, it means that all the anchors with 'youtube.com' and 'mobile.vodafone.de' will be excluded. Also, the included anchors need to have a class attribute with the value 'comments'   
 
 
 ## Validation
