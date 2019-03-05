@@ -19,20 +19,11 @@ import {AmpDigidip} from '../amp-digidip';
 const helpersMaker = env => {
 
   return {
-    createAmpDigidip(extAttrs) {
-      const element = this.getAmpDigidipElement(extAttrs);
+    createAmpDigidip() {
+      const element = document.createElement('amp-digidip');
       element.getAmpDoc = () => env.ampdoc;
 
       return new AmpDigidip(element);
-    },
-
-    getAmpDigidipElement(extAttrs) {
-      const element = document.createElement('amp-digidip');
-      for (const i in extAttrs) {
-        element.setAttribute(i, extAttrs[i]);
-      }
-
-      return element;
     },
   };
 };

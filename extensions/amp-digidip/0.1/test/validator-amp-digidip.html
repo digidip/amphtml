@@ -26,25 +26,23 @@
   <script async src="https://cdn.ampproject.org/v0.js"></script>
 </head>
 <body>
-  <amp-digidip layout="nodisplay">
-    <script type="application/json">
-      {
-        "output": "https://visit.digidip.net?pid=${customerId}&url=${href}&ref=${referrer}&locurl=${locationUrl}",
-        "section": [
-          "#product-listing-1",
-          "#product-listing-2"
-        ],
-        "attribute": {
-          "href": "((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*",
-          "id": "comments",
-          "class": "sidebar",
-          "rel": "(?!(skip))*"
-        },
-        "vars": {
-          "customerId": "12345"
-        }
+<amp-digidip layout="nodisplay">
+  <script type="application/json">
+    {
+      "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}&ref=${referrer}&location=${location}&rel=${rel}",
+      "section": [
+        "#track-section"
+      ],
+      "attribute": {
+        "href": "^((?!(http:\/\/|https:\/\/)?(www\\.)?(youtube\\.com)|(mobile\\.vodafone\\.de)).)+",
+        "class": "sidebar"
+      },
+      "vars": {
+        "customerId": "12345"
       }
-    </script>
-  </amp-digidip>
+    }
+  </script>
+
+</amp-digidip>
 </body>
 </html>

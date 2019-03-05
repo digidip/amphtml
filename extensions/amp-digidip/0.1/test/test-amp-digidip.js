@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import * as DocumentReady from '../../../../src/document-ready';
-import * as digidipOptionsModule from '../config-options';
 import helpersMaker from './test-helpers';
+import {LinkShifter} from '../link-shifter';
 
 describes.fakeWin('amp-digidip', {
   amp: {
@@ -24,96 +23,46 @@ describes.fakeWin('amp-digidip', {
   },
 }, env => {
 
-  let ampDigidip, digidipOpts, helpers;
+  let config, pageAttributes, helpers;
 
   beforeEach(() => {
-    digidipOpts = {
-      'publisher-id': 'mysuperblog',
-    };
 
     helpers = helpersMaker(env);
-    ampDigidip = helpers.createAmpDigidip(digidipOpts);
+
+    config = {
+      'output': 'https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}&ref=${referrer}&location=${location}&rel=${rel}',
+      'section': [
+        '#track-section',
+      ],
+      'attribute': {
+        'href': '^((?!(http:\/\/|https:\/\/)?(www\\.)?(youtube\\.com)).)+',
+        'class': 'sidebar',
+      },
+      'vars': {
+        'customerId': '12345',
+      },
+    };
+
+    pageAttributes = {
+      referrer: 'http://mydealz.com',
+      location: 'http://mydealz.com/123',
+    };
+
   });
 
   afterEach(() => {
     env.sandbox.restore();
   });
 
-  describe('digidipOptions', () => {
-    it('Should show an error if publisher-id is missing', () => {
-      ampDigidip = helpers.createAmpDigidip();
+  it('Should match the built url', () => {
 
-      allowConsoleError(() =>
-        expect(() => {
-          ampDigidip.buildCallback();
-        }).to.throw()
-      );
-    });
+    const shifter = new LinkShifter(null, null, null);
+    const anchorElement = document.createElement('a');
+    const ampDigidip = helpers.createAmpDigidip();
 
-    it('Should not show any error when specifying attr publisher-id', () => {
-      ampDigidip = helpers.createAmpDigidip({
-        'publisher-id': 'mysuperblog',
-      });
-      env.sandbox
-          .stub(DocumentReady, 'whenDocumentReady')
-          .returns(Promise.reject());
+    anchorElement.href = 'http://example.com';
 
-      expect(() => {
-        ampDigidip.buildCallback();
-      }).to.not.throw();
-    });
-  });
-
-  describe('At loading amp-digidip extension', () => {
-    it('should call method letsRockIt on buildCallback', () => {
-      env.sandbox
-          .stub(DocumentReady, 'whenDocumentReady')
-          .returns(Promise.resolve());
-
-      env.sandbox.stub(ampDigidip, 'letsRockIt_');
-
-      return ampDigidip.buildCallback().then(() => {
-        expect(ampDigidip.letsRockIt_.calledOnce).to.be.true;
-      });
-    });
-
-    it('Should read and set options', () => {
-      env.sandbox
-          .stub(DocumentReady, 'whenDocumentReady')
-          .returns(Promise.resolve());
-      env.sandbox.spy(digidipOptionsModule, 'getDigidipOptions');
-
-      const opts = {
-        'publisher-id': 'mysuperblog',
-        'new-tab': '1',
-        'hosts-ignore': 'facebook.com|youtube.com|baidu.com|wikipedia.org',
-        'reading-words-exclude': 'the|you|was|or|it|and|to|of|in|for|on|with',
-        'element-clickhandler': '',
-        'element-clickhandler-attribute': '',
-        'element-ignore-attribute': '',
-        'element-ignore-pattern': '',
-        'element-ignore-consider-parents': '0',
-      };
-
-      ampDigidip = helpers.createAmpDigidip(opts);
-      env.sandbox.stub(ampDigidip, 'letsRockIt_');
-
-      return ampDigidip.buildCallback().then(() => {
-        expect(digidipOptionsModule.getDigidipOptions.calledOnce).to.be.true;
-        expect(ampDigidip.digidipOpts_).to.deep.include({
-          publisherId: opts['publisher-id'],
-          newTab: opts['new-tab'],
-          hostsIgnore: opts['hosts-ignore'],
-          readingWordsExclude: opts['reading-words-exclude'],
-          elementClickhandler: opts['element-clickhandler'],
-          elementClickhandlerAttribute: opts['element-clickhandler-attribute'],
-          elementIgnoreAttribute: opts['element-ignore-attribute'],
-          elementIgnorePattern: opts['element-ignore-pattern'],
-          elementIgnoreConsiderParents: opts['element-ignore-consider-parents'],
-        });
-        expect(ampDigidip.digidipOpts_.hostsIgnore.split('|')).to.include
-            .members(['facebook.com']);
-      });
-    });
+    expect(shifter.replacePlaceHolders(anchorElement, ampDigidip))
+        .to.equal('html');
   });
 });
