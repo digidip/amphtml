@@ -57,9 +57,10 @@ describes.fakeWin('amp-digidip', {
   it('Should match the built url', () => {
 
     const ampDigidip = helpers.createAmpDigidip(config);
+
     const shifter = new LinkShifter(ampDigidip, null, null);
     const anchorElement = document.createElement('a');
-console.log(ampDigidip);
+
     anchorElement.href = 'http://example.com';
 
     expect(shifter.replacePlaceHolders(anchorElement, pageAttributes))
