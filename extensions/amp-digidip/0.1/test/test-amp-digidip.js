@@ -30,7 +30,7 @@ describes.fakeWin('amp-digidip', {
     helpers = helpersMaker(env);
 
     config = {
-      'output': 'https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}&ref=${referrer}&location=${location}&rel=${rel}',
+      'output': 'https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}&ref=${referrer}&location=${location}&rel=${rel}&usr=${data.customerId}&productId=${data.eventId}',
       'section': [
         '#track-section',
       ],
@@ -62,8 +62,10 @@ describes.fakeWin('amp-digidip', {
     const anchorElement = document.createElement('a');
 
     anchorElement.href = 'http://example.com';
+    anchorElement.rel = '235';
+    anchorElement.setAttribute('data-vars-event-id', '567');
 
     expect(shifter.replacePlaceHolders(anchorElement, pageAttributes))
-        .to.equal('https://visit.digidip.net?pid=110&url=http%3A%2F%2Fexample.com&cid=&ref=http%3A%2F%2Fmydealz.com&location=http%3A%2F%2Fmydealz.com%2F123&rel=');
+        .to.equal('https://visit.digidip.net?pid=110&url=http%3A%2F%2Fexample.com&cid=&ref=http%3A%2F%2Fmydealz.com&location=http%3A%2F%2Fmydealz.com%2F123&rel=235&usr=12345&productId=567');
   });
 });
