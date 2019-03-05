@@ -123,7 +123,7 @@ module.exports = {
 
   // Can't import the Karma constant config.LOG_ERROR, so we hard code it here.
   // Hopefully it'll never change.
-  //logLevel: 'ERROR',
+  logLevel: 'ERROR',
 
   autoWatch: true,
 
@@ -233,27 +233,15 @@ module.exports = {
     },
   },
 
-
-  browserConsoleLogOptions: {
-    level: 'log',
-    format: '%b %T: %m',
-    terminal: true,
-  },
-
-
   client: {
     mocha: {
       reporter: 'html',
       // Longer timeout on Travis; fail quickly at local.
       timeout: process.env.TRAVIS ? 10000 : 2000,
     },
-    captureConsole: true,
-    verboseLogging: true,
+    captureConsole: false,
+    verboseLogging: false,
   },
-
-  logLevel: 'DEBUG',
-
-
 
   singleRun: true,
   browserDisconnectTimeout: 10000,
