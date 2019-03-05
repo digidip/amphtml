@@ -17,6 +17,7 @@
 import {
   CTX_ATTR_NAME,
   CTX_ATTR_VALUE,
+  NS_DATA_PH,
   PREFIX_DATA_ATTR,
   WL_ANCHOR_ATTR,
 } from './constants';
@@ -180,6 +181,8 @@ export class LinkShifter {
   replacePlaceHolders(htmlElement, pageAttributes) {
     const {vars} = this.configOpts_;
     let {output} = this.configOpts_;
+    const data = {};
+
     /**
      * Replace placeholders for anchor attributes
      * defined in white list constant array
@@ -209,8 +212,8 @@ export class LinkShifter {
     });
 
     /**
-     * Replace placeholders for values defined
-     * on vars config property
+     * Set on data object properties and values defined
+     * on 'vars config property'
      */
     Object.keys(vars).forEach(key => {
       let confValue = '';
@@ -219,12 +222,14 @@ export class LinkShifter {
         confValue = vars[key];
       }
 
-      output = output.replace('${' + key + '}', encodeURIComponent(confValue));
+      data[key] = confValue;
     });
 
     /**
-     * Replace placeholders for values
-     * set on data attributes
+     * Set on data object properties and values set on the element
+     * 'data attributes' in case these have the save name that the
+     * 'vars config property', 'data attributes' values will
+     * overwrite 'vars config values'
      */
     const {dataset} = htmlElement;
     Object.keys(dataset).forEach(key => {
@@ -235,8 +240,17 @@ export class LinkShifter {
         return match.toLowerCase();
       });
 
-      output = output
-          .replace('${' + dataProp + '}', encodeURIComponent(dataValue));
+      data[dataProp] = dataValue;
+    });
+
+    /**
+     * Replace placeholders under data namespace for values merged of
+     * 'vars config property' and 'data attributes'
+     */
+
+    Object.keys(data).forEach(key => {
+      const placeHoder = '${' + NS_DATA_PH + key + '}';
+      output = output.replace(placeHoder, encodeURIComponent(data[key]));
     });
 
     /**

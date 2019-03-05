@@ -31,4 +31,12 @@ export const WL_ANCHOR_ATTR = [
   'rev',
 ];
 
+/**
+ * Prefix elements data attributes
+ */
 export const PREFIX_DATA_ATTR = 'vars';
+
+/**
+ * Name space for data placeholders
+ */
+export const NS_DATA_PH = 'data.';
