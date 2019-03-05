@@ -17,6 +17,8 @@
 import {
   CTX_ATTR_NAME,
   CTX_ATTR_VALUE,
+  NS_DATA_PH,
+  PREFIX_DATA_ATTR,
   WL_ANCHOR_ATTR,
 } from './constants';
 import {getConfigOpts} from './config-options';
@@ -39,6 +41,9 @@ export class LinkShifter {
 
     /** @private {?Object} */
     this.configOpts_ = getConfigOpts(ampElement);
+
+    /** @private {?string} */
+    this.ctxAttrValue_ = CTX_ATTR_VALUE().toString();
 
     /** @private {?RegExp} */
     this.regexDomainUrl_ = /^https?:\/\/(www\.)?([^\/:]*)(:\d+)?(\/.*)?$/;
@@ -110,8 +115,7 @@ export class LinkShifter {
    * @private
    */
   wasShifted_(htmlElement) {
-    const ctxAttrValue = CTX_ATTR_VALUE().toString();
-
+    const ctxAttrValue = this.ctxAttrValue_;
     return (htmlElement.hasAttribute(CTX_ATTR_NAME)) &&
         (htmlElement.getAttribute(CTX_ATTR_NAME) === ctxAttrValue);
   }
@@ -154,7 +158,8 @@ export class LinkShifter {
       // If the link has been "activated" via contextmenu,
       // we have to keep the shifting in mind
       if (this.event_.type === 'contextmenu') {
-        htmlElement.setAttribute(CTX_ATTR_NAME, CTX_ATTR_VALUE());
+        this.ctxAttrValue_ = CTX_ATTR_VALUE().toString();
+        htmlElement.setAttribute(CTX_ATTR_NAME, this.ctxAttrValue_);
       }
 
       this.viewer_.win.setTimeout(() => {
@@ -176,6 +181,8 @@ export class LinkShifter {
   replacePlaceHolders(htmlElement, pageAttributes) {
     const {vars} = this.configOpts_;
     let {output} = this.configOpts_;
+    const data = {};
+
     /**
      * Replace placeholders for anchor attributes
      * defined in white list constant array
@@ -205,8 +212,8 @@ export class LinkShifter {
     });
 
     /**
-     * Replace placeholders for values defined
-     * in vars config property
+     * Set on data object properties and values defined
+     * on 'vars config property'
      */
     Object.keys(vars).forEach(key => {
       let confValue = '';
@@ -215,12 +222,45 @@ export class LinkShifter {
         confValue = vars[key];
       }
 
-      output = output.replace('${' + key + '}', encodeURIComponent(confValue));
+      data[key] = confValue;
     });
 
-    console.log('output', output);
+    /**
+     * Set on data object properties and values set on the element
+     * 'data attributes' in case these have the save name that the
+     * 'vars config property', 'data attributes' values will
+     * overwrite 'vars config values'
+     */
+    const {dataset} = htmlElement;
+    Object.keys(dataset).forEach(key => {
+      const dataValue = dataset[key];
+      let dataProp = key.split(PREFIX_DATA_ATTR)[1];
+
+      dataProp = dataProp.replace(/^[A-Z]/, match => {
+        return match.toLowerCase();
+      });
+
+      data[dataProp] = dataValue;
+    });
+
+    /**
+     * Replace placeholders under data namespace for values merged of
+     * 'vars config property' and 'data attributes'
+     */
+
+    Object.keys(data).forEach(key => {
+      const placeHoder = '${' + NS_DATA_PH + key + '}';
+      output = output.replace(placeHoder, encodeURIComponent(data[key]));
+    });
+
+    /**
+     * Finally to clean up we leave empty all placeholders that
+     * were not replace in previous steps
+     */
+    output = output.replace(/\${[A-Za-z0-9]+}+/, () => {
+      return '';
+    });
 
     return output;
   }
-
 }
