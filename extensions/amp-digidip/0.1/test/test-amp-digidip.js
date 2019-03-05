@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import helpersMaker from './test-helpers';
 import {LinkShifter} from '../link-shifter';
+import helpersMaker from './test-helpers';
 
 describes.fakeWin('amp-digidip', {
   amp: {
@@ -56,13 +56,13 @@ describes.fakeWin('amp-digidip', {
 
   it('Should match the built url', () => {
 
-    const shifter = new LinkShifter(null, null, null);
+    const ampDigidip = helpers.createAmpDigidip(config);
+    const shifter = new LinkShifter(ampDigidip, null, null);
     const anchorElement = document.createElement('a');
-    const ampDigidip = helpers.createAmpDigidip();
-
+console.log(ampDigidip);
     anchorElement.href = 'http://example.com';
 
-    expect(shifter.replacePlaceHolders(anchorElement, ampDigidip))
+    expect(shifter.replacePlaceHolders(anchorElement, pageAttributes))
         .to.equal('html');
   });
 });

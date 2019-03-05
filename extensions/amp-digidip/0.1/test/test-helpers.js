@@ -19,8 +19,15 @@ import {AmpDigidip} from '../amp-digidip';
 const helpersMaker = env => {
 
   return {
-    createAmpDigidip() {
+    createAmpDigidip(config) {
+
       const element = document.createElement('amp-digidip');
+      const script = document.createElement('script');
+
+      script.setAttribute('type','application/json');
+      script.innerHTML = config;
+
+      element.innerText = script;
       element.getAmpDoc = () => env.ampdoc;
 
       return new AmpDigidip(element);
