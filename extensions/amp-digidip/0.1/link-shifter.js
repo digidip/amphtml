@@ -17,6 +17,7 @@
 import {
   CTX_ATTR_NAME,
   CTX_ATTR_VALUE,
+  PREFIX_DATA_ATTR,
   WL_ANCHOR_ATTR,
 } from './constants';
 import {getConfigOpts} from './config-options';
@@ -39,6 +40,9 @@ export class LinkShifter {
 
     /** @private {?Object} */
     this.configOpts_ = getConfigOpts(ampElement);
+
+    /** @private {?string} */
+    this.ctxAttrValue_ = CTX_ATTR_VALUE().toString();
 
     /** @private {?RegExp} */
     this.regexDomainUrl_ = /^https?:\/\/(www\.)?([^\/:]*)(:\d+)?(\/.*)?$/;
@@ -110,8 +114,7 @@ export class LinkShifter {
    * @private
    */
   wasShifted_(htmlElement) {
-    const ctxAttrValue = CTX_ATTR_VALUE().toString();
-
+    const ctxAttrValue = this.ctxAttrValue_;
     return (htmlElement.hasAttribute(CTX_ATTR_NAME)) &&
         (htmlElement.getAttribute(CTX_ATTR_NAME) === ctxAttrValue);
   }
@@ -154,7 +157,8 @@ export class LinkShifter {
       // If the link has been "activated" via contextmenu,
       // we have to keep the shifting in mind
       if (this.event_.type === 'contextmenu') {
-        htmlElement.setAttribute(CTX_ATTR_NAME, CTX_ATTR_VALUE());
+        this.ctxAttrValue_ = CTX_ATTR_VALUE().toString();
+        htmlElement.setAttribute(CTX_ATTR_NAME, this.ctxAttrValue_);
       }
 
       this.viewer_.win.setTimeout(() => {
@@ -206,7 +210,7 @@ export class LinkShifter {
 
     /**
      * Replace placeholders for values defined
-     * in vars config property
+     * on vars config property
      */
     Object.keys(vars).forEach(key => {
       let confValue = '';
@@ -218,9 +222,31 @@ export class LinkShifter {
       output = output.replace('${' + key + '}', encodeURIComponent(confValue));
     });
 
-    console.log('output', output);
+    /**
+     * Replace placeholders for values
+     * set on data attributes
+     */
+    const {dataset} = htmlElement;
+    Object.keys(dataset).forEach(key => {
+      const dataValue = dataset[key];
+      let dataProp = key.split(PREFIX_DATA_ATTR)[1];
+
+      dataProp = dataProp.replace(/^[A-Z]/, match => {
+        return match.toLowerCase();
+      });
+
+      output = output
+          .replace('${' + dataProp + '}', encodeURIComponent(dataValue));
+    });
+
+    /**
+     * Finally to clean up we leave empty all placeholders that
+     * were not replace in previous steps
+     */
+    output = output.replace(/\${[A-Za-z0-9]+}+/, () => {
+      return '';
+    });
 
     return output;
   }
-
 }

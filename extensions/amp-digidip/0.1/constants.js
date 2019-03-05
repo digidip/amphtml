@@ -30,3 +30,5 @@ export const WL_ANCHOR_ATTR = [
   'rel',
   'rev',
 ];
+
+export const PREFIX_DATA_ATTR = 'vars';
