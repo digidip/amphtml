@@ -64,6 +64,6 @@ describes.fakeWin('amp-digidip', {
     anchorElement.href = 'http://example.com';
 
     expect(shifter.replacePlaceHolders(anchorElement, pageAttributes))
-        .to.equal('html');
+        .to.equal('https://visit.digidip.net?pid=110&url=http%3A%2F%2Fexample.com&cid=&ref=http%3A%2F%2Fmydealz.com&location=http%3A%2F%2Fmydealz.com%2F123&rel=');
   });
 });
