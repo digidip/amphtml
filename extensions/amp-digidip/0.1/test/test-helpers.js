@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-import {AmpDigidip} from '../amp-digidip';
-
-const helpersMaker = env => {
+const helpersMaker = () => {
 
   return {
-    createAmpDigidip(extAttrs) {
-      const element = this.getAmpDigidipElement(extAttrs);
-      element.getAmpDoc = () => env.ampdoc;
+    createAmpDigidip(config) {
 
-      return new AmpDigidip(element);
-    },
-
-    getAmpDigidipElement(extAttrs) {
       const element = document.createElement('amp-digidip');
-      for (const i in extAttrs) {
-        element.setAttribute(i, extAttrs[i]);
-      }
+
+      element.innerHTML = '<script type="application/json">' +
+        JSON.stringify(config) +
+        '</script>';
 
       return element;
     },
