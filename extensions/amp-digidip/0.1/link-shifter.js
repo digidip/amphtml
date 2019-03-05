@@ -65,8 +65,6 @@ export class LinkShifter {
       return;
     }
 
-    // check if there is a ignore_attribute and and ignore_pattern defined
-    // and check if the current element or it's parent has it
     if (!this.testAttributes_(htmlElement)) {
       return;
     }
