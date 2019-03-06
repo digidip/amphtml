@@ -15,6 +15,8 @@
  */
 
 import {LinkShifter} from '../link-shifter';
+import {getConfigOpts} from '../config-options';
+import {getScopeElements} from '../helper';
 import helpersMaker from './test-helpers';
 
 describes.fakeWin('amp-digidip', {
@@ -23,7 +25,7 @@ describes.fakeWin('amp-digidip', {
   },
 }, env => {
 
-  let config, pageAttributes, helpers;
+  let config, pageAttributes, helpers, mockedHtml;
 
   beforeEach(() => {
 
@@ -33,15 +35,22 @@ describes.fakeWin('amp-digidip', {
       'output': 'https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}&ref=${referrer}&location=${location}&rel=${rel}&usr=${data.customerId}&productId=${data.eventId}',
       'section': [
         '#track-section',
+        '#track-section2',
       ],
-      'attribute': {
-        'href': '^((?!(http:\/\/|https:\/\/)?(www\\.)?(youtube\\.com)).)+',
-        'class': 'sidebar',
-      },
       'vars': {
         'customerId': '12345',
       },
     };
+
+    mockedHtml = '<div>' +
+      '<a class="sidebar" href="http://youtube.com">you tube</a>' +
+      '</div>' +
+      '<div id="track-section">' +
+      '<a class="sidebar" href="http://vendor.com">Vendor1</a>' +
+      '</div>' +
+      '<div id="track-section2">' +
+      '<a class="sidebar" href="https://gmail.com">Vendor2</a>' +
+      '</div>';
 
     pageAttributes = {
       referrer: 'http://mydealz.com',
@@ -68,4 +77,22 @@ describes.fakeWin('amp-digidip', {
     expect(shifter.replacePlaceHolders(anchorElement, pageAttributes))
         .to.equal('https://visit.digidip.net?pid=110&url=http%3A%2F%2Fexample.com&cid=&ref=http%3A%2F%2Fmydealz.com&location=http%3A%2F%2Fmydealz.com%2F123&rel=235&usr=12345&productId=567');
   });
+
+  it('Should return the number of anchors that match the config', () => {
+
+    const ampDigidip = helpers.createAmpDigidip(config);
+    const configOpts_ = getConfigOpts(ampDigidip);
+
+    const doc = document.implementation.createHTMLDocument('test document');
+    doc.body.appendChild(ampDigidip);
+
+
+
+    const list = getScopeElements(ampDigidip, configOpts_);
+
+    expect(list.length).to.equal(1);
+  });
+
+
+
 });
