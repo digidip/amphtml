@@ -27,14 +27,10 @@ export class LinkShifter {
   /**
    * @param {!AmpElement} ampElement
    * @param {?../../../src/service/viewer-impl.Viewer} viewer
-   * @param {?../../../src/service/ampdoc-impl.AmpDoc} ampDoc
    */
-  constructor(ampElement, viewer, ampDoc) {
+  constructor(ampElement, viewer) {
     /** @private {?../../../src/service/viewer-impl.Viewer} */
     this.viewer_ = viewer;
-
-    /** @private {?../../../src/service/ampdoc-impl.AmpDoc} */
-    this.ampDoc_ = ampDoc;
 
     /** @private {?Event} */
     this.event_ = null;

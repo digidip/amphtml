@@ -66,8 +66,7 @@ export class AmpDigidip extends AMP.BaseElement {
   letsRockIt_() {
     this.shifter_ = new LinkShifter(
         this.element,
-        this.viewer_,
-        this.ampDoc_);
+        this.viewer_);
 
     this.attachClickEvent_();
 

@@ -56,10 +56,10 @@ Code:
 ```html
     <amp-digidip
         layout="nodisplay">
-        
+
         <script type="application/json">
                 {
-                    "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
+                    "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${data.customerId}",
                     "section": [
                         "#product-listing-1",
                         "#product-listing-2",
@@ -75,7 +75,7 @@ Code:
                     }
                 }
          </script>
-            
+
     </amp-digidip>
 ```
 
@@ -95,10 +95,10 @@ The final code should look like:
     ...
     <amp-digidip
         layout="nodisplay">
-        
+
         <script type="application/json">
                 {
-                    "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
+                    "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${data.customerId}",
                     "section": [
                         "#product-listing-1",
                         "#product-listing-2",
@@ -114,14 +114,14 @@ The final code should look like:
                     }
                 }
          </script>
-            
+
     </amp-digidip>
     ....
 </body>
 </html>
 ```
 
-## Json configuration
+## JSON configuration
 
 ##### output (required)
 
@@ -131,16 +131,16 @@ Example:
 ```html
     <amp-digidip
         layout="nodisplay">
-        
+
         <script type="application/json">
                 {
-                    "output": "https://visit.digidip.net?pid=110&cid=${vars.customerId}",
+                    "output": "https://visit.digidip.net?pid=110&cid=${data.customerId}",
                     "vars": {
                         "customerId": "12345"
                     }
                 }
          </script>
-            
+
     </amp-digidip>
 ```
 
@@ -153,28 +153,28 @@ The config could be something like:
 
 ```json
     {
-      "output": "https://visit.digidip.net?pid=110&cid=${vars.customerId}"
+      "output": "https://visit.digidip.net?eid=${data.eventId}&cid=${data.customerId}"
 
     }
 ```
-The resulting rewriting url would be:
+The resulting, rewritten URL would be:
 ```url
-https://visit.digidip.net?pid=110&cid=12345
+https://visit.digidip.net?eid=231&cid=12345
 ```
 
-Besides defined placeholders that match the data defined in the 'vars' property of the JSON configuration, or as a data attribute, there are other pre-defined placeholders that will be shifted with information such as anchor url, page location, refferer page, or anchor id. The following table shows the relationshsip between defined data and placeholders.
+Besides defined placeholders that match the data defined in the 'vars' property of the JSON configuration, or as a data attribute, there are other pre-defined placeholders that will be shifted with information such as anchor url, page location, referrer page, or anchor id. The following table shows the relationship between defined data and placeholders.
 
-| value          | source     |       example                                       |    placeholder       
+| value          | source     |       example                                         |    placeholder       
 | -------------- | ---------- |-------------------------------------------------------|----------------------
-| location       | page       |    'https://publisher.com/43465'                      |  `${location}`        
-| referrer       | page       |    'https://publisher.com'                            |  `${referrer}`        
+| location       | page       |    'https://www.pepper.com/'                          |  `${location}`        
+| referrer       | page       |    'https://google.com'                               |  `${referrer}`        
 | rev            | anchor     |    `<a href="..." rev="author" />`                    |  `${rev}`             
 | id             | anchor     |    `<a href="..." id="link" />`                       |  `${id}`              
 | rev            | anchor     |    `<a href="..." rel="pass" />`                      |  `${rel}`             
-| href           | anchor     |    `<a href="https://vendor.com" />`                  |  `${href}`            
+| href           | anchor     |    `<a href="https://amazon.com" />`                  |  `${href}`            
 | rev            | anchor     |    `<a href="..." rev="author" />`                    |  `${rev}`             
-| data-vars-*    | anchor     |    `<a href="..." data-vars-merchant-id="123" />`     |  `${vars.merchantId}` 
-| vars.*         | config     |    `{ "vars": { "publisherId": "123" } }`             |  `${vars.publisherId}`
+| data-vars-*    | anchor     |    `<a href="..." data-vars-merchant-id="123" />`     |  `${data.merchantId}`
+| vars.*         | config     |    `{ "vars": { "publisherId": "123" } }`             |  `${data.publisherId}`
 
 
 ##### section (optional)
@@ -192,7 +192,7 @@ Example:
     }
 ```
 
-In the previous example, the html sections defined with attribute ID equeal to "product-listing-1" and "product-listing-2" will be considered for url rewriting. 
+In the previous example, the html sections defined with attribute ID equal to "product-listing-1" and "product-listing-2" will be considered for url rewriting.
 
 ##### attribute (optional)
 
