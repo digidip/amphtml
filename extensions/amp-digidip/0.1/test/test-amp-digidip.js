@@ -85,7 +85,7 @@ describes.fakeWin('amp-digidip', {
 
     const doc = document.implementation.createHTMLDocument('test document');
     doc.body.appendChild(ampDigidip);
-
+    doc.body.insertAdjacentHTML('afterbegin', mockedHtml);
 
 
     const list = getScopeElements(ampDigidip, configOpts_);
