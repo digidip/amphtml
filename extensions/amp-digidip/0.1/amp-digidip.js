@@ -38,7 +38,7 @@ export class AmpDigidip extends AMP.BaseElement {
     /** @private {?Object} */
     this.configOpts_ = {};
 
-    /** @private {?NodeList} */
+    /** @private {?Object} */
     this.listElements_ = null;
 
     /** @private {!Document|!ShadowRoot} */

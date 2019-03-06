@@ -18,7 +18,7 @@
 /**
  *
  * @param {?../../../src/service/ampdoc-impl.AmpDoc} ampDoc
- * @param {!Object}  configOpts
+ * @param {!Object} configOpts
  * @return {*}
  */
 export function getScopeElements(ampDoc, configOpts) {
@@ -26,11 +26,44 @@ export function getScopeElements(ampDoc, configOpts) {
   const doc = ampDoc.getRootNode();
   let cssSelector = configOpts.section.join(' a, ');
   let selection = doc.querySelectorAll('a');
+  const filteredSelection = [];
 
   if (configOpts.section.length !== 0) {
     cssSelector = cssSelector + ' a';
     selection = doc.querySelectorAll(cssSelector);
   }
 
-  return selection;
+  selection.forEach(element => {
+    if (hasAttributeValues(element, configOpts)) {
+      filteredSelection.push(element);
+    }
+  });
+
+  return filteredSelection;
+}
+
+/**
+ * Match attributes of the anchor if have been defined in config
+ * compare every attribute defined in config as regex with its
+ * corresponding value of the anchor element attribute
+ * @param {!Node} htmlElement
+ * @param {!Object} configOpts
+ */
+function hasAttributeValues(htmlElement, configOpts) {
+  const anchorAttr = configOpts.attribute;
+  const attrKeys = Object.keys(anchorAttr);
+  let test = true;
+
+  if (attrKeys.length === 0) {
+    return true;
+  }
+
+  attrKeys.forEach(key => {
+    const value = anchorAttr[key];
+    const reg = new RegExp(value);
+
+    test = test && reg.test(htmlElement.getAttribute(key));
+  });
+
+  return test;
 }
