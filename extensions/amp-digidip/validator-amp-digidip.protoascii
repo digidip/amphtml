@@ -28,28 +28,12 @@ tags: {  # <amp-digidip>
   html_format: AMP
   tag_name: "AMP-DIGIDIP"
   requires_extension: "amp-digidip"
-  attrs: {
-    name: "element-clickhandler-attribute"
+  child_tags: {
+    mandatory_min_num_child_tags: 1
+    first_child_tag_name_oneof: "SCRIPT"
   }
-  attrs: {
-    name: "element-clickhandler"
-  }
-  attrs: {
-    name: "element-ignore-attribute"
-  }
-  attrs: {
-    name: "element-ignore-pattern"
-  }
-  attrs: {
-    name: "hosts-ignore"
-  }
-  attrs: {
-    name: "publisher-id"
-    mandatory: true
-    value_regex_casei: "^[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?$"
-  }
-  attr_lists: "extended-amp-global"
   amp_layout: {
     supported_layouts: NODISPLAY
   }
+  attr_lists: "extended-amp-global"
 }
