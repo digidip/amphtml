@@ -35,8 +35,11 @@ describes.fakeWin('amp-digidip', {
       'output': 'https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}&ref=${referrer}&location=${location}&rel=${rel}&usr=${data.customerId}&productId=${data.eventId}',
       'section': [
         '#track-section',
-        '#track-section2',
       ],
+      'attribute': {
+        'class': 'sidebar',
+        'href': '^((?!\\bgmail\\.com\\b).)*$',
+      },
       'vars': {
         'customerId': '12345',
       },
@@ -47,8 +50,6 @@ describes.fakeWin('amp-digidip', {
       '</div>' +
       '<div id="track-section">' +
       '<a class="sidebar" href="http://vendor.com">Vendor1</a>' +
-      '</div>' +
-      '<div id="track-section2">' +
       '<a class="sidebar" href="https://gmail.com">Vendor2</a>' +
       '</div>';
 
@@ -81,14 +82,14 @@ describes.fakeWin('amp-digidip', {
   it('Should return the number of anchors that match the config', () => {
 
     const ampDigidip = helpers.createAmpDigidip(config);
-    const configOpts_ = getConfigOpts(ampDigidip);
 
     const doc = document.implementation.createHTMLDocument('test document');
     doc.body.appendChild(ampDigidip);
     doc.body.insertAdjacentHTML('afterbegin', mockedHtml);
 
+    const configOpts_ = getConfigOpts(ampDigidip);
 
-    const list = getScopeElements(ampDigidip, configOpts_);
+    const list = getScopeElements(doc, configOpts_);
 
     expect(list.length).to.equal(1);
   });
