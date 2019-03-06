@@ -38,7 +38,7 @@ export class LinkShifter {
     /** @private {?Object} */
     this.configOpts_ = getConfigOpts(ampElement);
 
-    /** @private {?string} */
+    /** @private {boolean|number|string} */
     this.ctxAttrValue_ = CTX_ATTR_VALUE().toString();
 
     /** @private {?RegExp} */
@@ -74,7 +74,7 @@ export class LinkShifter {
 
   /**
    * Check if the anchor element was already shifted
-   * @param {!Node} htmlElement
+   * @param {?Element} htmlElement
    * @return {boolean}
    * @private
    */
@@ -86,7 +86,7 @@ export class LinkShifter {
 
   /**
    * Check if the anchor element leads to an internal link
-   * @param {!Node} htmlElement
+   * @param {?Element} htmlElement
    * @param {?string} trimmedDomain
    * @return {boolean}
    */
@@ -104,8 +104,7 @@ export class LinkShifter {
 
   /**
    *
-   * @param {!Node} htmlElement
-   * @return {string}
+   * @param {?Element} htmlElement
    */
   setTrackingUrl_(htmlElement) {
 
@@ -138,7 +137,7 @@ export class LinkShifter {
   }
 
   /**
-   * @param {!Node} htmlElement
+   * @param {?Element} htmlElement
    * @param {!Object} pageAttributes
    * @return {string}
    */

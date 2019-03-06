@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {AmpEvents} from '../../../src/amp-events';
 import {LinkShifter} from './link-shifter';
 import {Services} from '../../../src/services';
 import {getConfigOpts} from './config-options';
@@ -40,16 +39,12 @@ export class AmpDigidip extends AMP.BaseElement {
 
     /** @private {?Object} */
     this.listElements_ = null;
-
-    /** @private {!Document|!ShadowRoot} */
-    this.rootNode_ = null;
   }
 
   /** @override */
   buildCallback() {
 
     this.ampDoc_ = this.getAmpDoc();
-    this.rootNode_ = this.ampDoc_.getRootNode();
     this.viewer_ = Services.viewerForDoc(this.ampDoc_);
 
     this.configOpts_ = getConfigOpts(this.element);
@@ -69,9 +64,6 @@ export class AmpDigidip extends AMP.BaseElement {
         this.viewer_);
 
     this.attachClickEvent_();
-
-    this.rootNode_.addEventListener(AmpEvents.DOM_UPDATE,
-        this.attachClickEvent_());
   }
 
   /**
@@ -91,6 +83,8 @@ export class AmpDigidip extends AMP.BaseElement {
         this.shifter_.clickHandler(event);
       }, false);
     });
+
+    return true;
   }
 
   /** @override */
