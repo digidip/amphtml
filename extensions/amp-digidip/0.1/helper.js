@@ -51,8 +51,6 @@ export function getScopeElements(ampDoc, configOpts) {
  */
 function hasAttributeValues(htmlElement, configOpts) {
 
-  console.log(htmlElement, configOpts);
-
   const anchorAttr = configOpts.attribute;
   const attrKeys = Object.keys(anchorAttr);
   let test = true;
