@@ -166,8 +166,8 @@ Besides defined placeholders that match the data defined in the 'vars' property 
 
 | value          | source     |       example                                         |    placeholder       
 | -------------- | ---------- |-------------------------------------------------------|----------------------
-| location       | page       |    'https://www.pepper.com/'                          |  `${location}`        
-| referrer       | page       |    'https://google.com'                               |  `${referrer}`        
+| location       | page       |    `https://www.pepper.com/`                          |  `${location}`        
+| referrer       | page       |    `https://google.de/`                               |  `${referrer}`        
 | rev            | anchor     |    `<a href="..." rev="author" />`                    |  `${rev}`             
 | id             | anchor     |    `<a href="..." id="link" />`                       |  `${id}`              
 | rev            | anchor     |    `<a href="..." rel="pass" />`                      |  `${rel}`             
