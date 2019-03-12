@@ -50,9 +50,7 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     this.configOpts_ = getConfigOpts(this.element);
 
     return this.ampDoc_.whenBodyAvailable()
-        .then(() => {
-          this.letsRockIt_();
-        });
+        .then(this.letsRockIt_.bind(this));
   }
 
   /**
