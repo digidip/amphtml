@@ -23,7 +23,7 @@ limitations under the License.
   </tr>
   <tr>
     <td width="40%"><strong>Required Script</strong></td>
-    <td><code>&lt;script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js``">&lt;/script></code></td>
+    <td><code>&lt;script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js`>&lt;/script></code></td>
   </tr>
   <tr>
     <td class="col-fourty"><strong><a href="https://www.ampproject.org/docs/guides/responsive/control_layout.html">Supported Layouts</a></strong></td>
@@ -46,7 +46,7 @@ Inside the `<head>...</head>` section of your AMP page, insert this code before 
 
 Code:
 ```html
-    <script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js"></script>
+    <script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js`"></script>
 ```
 
 **Add the amp-digidip extension**
@@ -104,7 +104,7 @@ The final code should look like:
                         "#product-listing-2",
                     ],
                     "attribute": {
-                        "href": "((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*",
+                        "href": "`((?!(https:\/\/youtube\.com)|(https:\/\/mobile\.vodafone\.de)).)*`",
                         "id": "comments",
                         "class": "sidebar",
                         "rel": "(?!(skip))*",
@@ -134,7 +134,7 @@ Example:
 
         <script type="application/json">
                 {
-                    "output": "https://visit.digidip.net?pid=110&cid=${data.customerId}",
+                    "output": "https://visit.digidip.net?pid=110&cid=${data.customerId}`",
                     "vars": {
                         "customerId": "12345"
                     }
