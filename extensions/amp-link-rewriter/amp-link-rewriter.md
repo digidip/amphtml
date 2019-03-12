@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# `amp-digidip`
+# `amp-link-rewriter`
 
 <table>
   <tr>
@@ -23,7 +23,7 @@ limitations under the License.
   </tr>
   <tr>
     <td width="40%"><strong>Required Script</strong></td>
-    <td><code>&lt;script async custom-element="amp-digidip" src="https://cdn.ampproject.org/v0/amp-digidip-0.1.js">&lt;/script></code></td>
+    <td><code>&lt;script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js">&lt;/script></code></td>
   </tr>
   <tr>
     <td class="col-fourty"><strong><a href="https://www.ampproject.org/docs/guides/responsive/control_layout.html">Supported Layouts</a></strong></td>
@@ -46,7 +46,7 @@ Inside the `<head>...</head>` section of your AMP page, insert this code before 
 
 Code:
 ```html
-    <script async custom-element="amp-digidip" src="https://cdn.ampproject.org/v0/amp-digidip-0.1.js"></script>
+    <script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-digidip-0.1.js"></script>
 ```
 
 **Add the amp-digidip extension**
@@ -87,7 +87,7 @@ The final code should look like:
 <html ⚡>
 <head>
   ...
-  <script async custom-element="amp-digidip" src="https://cdn.ampproject.org/v0/amp-digidip-0.1.js"></script>
+  <script async custom-element="amp-digidip" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js"></script>
   ...
   <script async src="https://cdn.ampproject.org/v0.js"></script>
 </head>
