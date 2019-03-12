@@ -15,6 +15,7 @@
  */
 
 import {LinkShifter} from './link-shifter';
+import {Priority} from '../../../src/service/navigation';
 import {Services} from '../../../src/services';
 import {getConfigOpts} from './config-options';
 import {getScopeElements} from './helper';
@@ -73,13 +74,13 @@ export class AmpLinkRewriter extends AMP.BaseElement {
         this.configOpts_);
 
     this.listElements_.forEach(nodeElement => {
-      nodeElement.addEventListener('click', event => {
-        this.shifter_.clickHandler(event);
-      }, false);
 
-      nodeElement.addEventListener('contextmenu', event => {
+      const navigation = Services.navigationForDoc(nodeElement);
+      navigation.registerAnchorMutator((anchor, event) => {
         this.shifter_.clickHandler(event);
-      }, false);
+      },
+      Priority.LINK_REWRITER_MANAGER);
+
     });
 
     return true;

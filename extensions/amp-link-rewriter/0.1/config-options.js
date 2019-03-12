@@ -23,7 +23,7 @@ const errors = {
 
 /**
  * @param {!AmpElement} element
- * @return {!Object}
+ * @return {!JsonObject}
  */
 export function getConfigOpts(element) {
 
