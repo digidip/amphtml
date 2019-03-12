@@ -146,7 +146,7 @@ Example:
 
 We can also define data values in the anchor data attribute as the following example:
 ```html
-    <a href="http://amazon.de/644556" data-vars-event-id="231">
+    <a href="https://www.amazon.de/s?i=computers&rh=n%3A340843031&ref=sn_gfs_co_computervs_AM_5" data-vars-event-id="231">
 ```
 
 The config could be something like:
