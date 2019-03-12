@@ -93,7 +93,7 @@ The final code should look like:
 </head>
 <body>
     ...
-    <amp-digidip
+    <amp-link-rewriter
         layout="nodisplay">
 
         <script type="application/json">
@@ -115,7 +115,7 @@ The final code should look like:
                 }
          </script>
 
-    </amp-digidip>
+    </amp-link-rewriter>
     ....
 </body>
 </html>
@@ -129,7 +129,7 @@ The "output" property is the redirection url plus a query string of placeholders
 
 Example:
 ```html
-    <amp-digidip
+    <amp-link-rewriter
         layout="nodisplay">
 
         <script type="application/json">
@@ -141,7 +141,7 @@ Example:
                 }
          </script>
 
-    </amp-digidip>
+    </amp-link-rewriter>
 ```
 
 We can also define data values in the anchor data attribute as the following example:
@@ -218,4 +218,4 @@ In this example, it means that all the anchors with 'youtube.com' and 'mobile.vo
 
 ## Validation
 
-See [amp-digidip rules](validator-amp-digidip.protoascii) in the AMP validator specification.
+See [amp-link-rewriter rules](validator-amp-link-rewriter.protoascii) in the AMP validator specification.
