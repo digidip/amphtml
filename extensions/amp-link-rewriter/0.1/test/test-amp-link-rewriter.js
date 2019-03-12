@@ -66,9 +66,9 @@ describes.fakeWin('amp-link-rewriter', {
 
   it('Should match the built url', () => {
 
-    const ampDigidip = helpers.createAmpDigidip(config);
+    const linkRewriterElement = helpers.createLinkRewriterElement(config);
 
-    const shifter = new LinkShifter(ampDigidip, null, null);
+    const shifter = new LinkShifter(linkRewriterElement, null);
     const anchorElement = document.createElement('a');
 
     anchorElement.href = 'http://example.com';
@@ -81,13 +81,13 @@ describes.fakeWin('amp-link-rewriter', {
 
   it('Should return the number of anchors that match the config', () => {
 
-    const ampDigidip = helpers.createAmpDigidip(config);
+    const linkRewriterElement = helpers.createLinkRewriterElement(config);
 
     const doc = document.implementation.createHTMLDocument('test document');
-    doc.body.appendChild(ampDigidip);
+    doc.body.appendChild(linkRewriterElement);
     doc.body.insertAdjacentHTML('afterbegin', mockedHtml);
 
-    const configOpts_ = getConfigOpts(ampDigidip);
+    const configOpts_ = getConfigOpts(linkRewriterElement);
 
     const list = getScopeElements(doc, configOpts_);
 

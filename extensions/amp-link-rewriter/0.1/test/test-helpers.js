@@ -17,7 +17,7 @@
 const helpersMaker = () => {
 
   return {
-    createAmpDigidip(config) {
+    createLinkRewriterElement(config) {
 
       const element = document.createElement('amp-link-rewriter');
 
