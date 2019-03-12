@@ -19,7 +19,7 @@ const helpersMaker = () => {
   return {
     createAmpDigidip(config) {
 
-      const element = document.createElement('amp-digidip');
+      const element = document.createElement('amp-link-rewriter');
 
       element.innerHTML = '<script type="application/json">' +
         JSON.stringify(config) +

@@ -19,7 +19,7 @@ import {Services} from '../../../src/services';
 import {getConfigOpts} from './config-options';
 import {getScopeElements} from './helper';
 
-export class AmpDigidip extends AMP.BaseElement {
+export class AmpLinkRewriter extends AMP.BaseElement {
 
   /** @param {!AmpElement} element */
   constructor(element) {
@@ -93,6 +93,6 @@ export class AmpDigidip extends AMP.BaseElement {
   }
 }
 
-AMP.extension('amp-digidip', '0.1', AMP => {
-  AMP.registerElement('amp-digidip', AmpDigidip);
+AMP.extension('amp-link-rewriter', '0.1', AMP => {
+  AMP.registerElement('amp-link-rewriter', AmpLinkRewriter);
 });

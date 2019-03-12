@@ -19,9 +19,9 @@ import {getConfigOpts} from '../config-options';
 import {getScopeElements} from '../helper';
 import helpersMaker from './test-helpers';
 
-describes.fakeWin('amp-digidip', {
+describes.fakeWin('amp-link-rewriter', {
   amp: {
-    extensions: ['amp-digidip'],
+    extensions: ['amp-link-rewriter'],
   },
 }, env => {
 
