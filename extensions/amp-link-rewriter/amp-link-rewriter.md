@@ -23,7 +23,7 @@ limitations under the License.
   </tr>
   <tr>
     <td width="40%"><strong>Required Script</strong></td>
-    <td><code>&lt;script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js">&lt;/script></code></td>
+    <td><code>&lt;script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js``">&lt;/script></code></td>
   </tr>
   <tr>
     <td class="col-fourty"><strong><a href="https://www.ampproject.org/docs/guides/responsive/control_layout.html">Supported Layouts</a></strong></td>
@@ -36,7 +36,7 @@ limitations under the License.
 
 Digidip allows you to monetise your content through affiliate marketing. It gives you instant access to over 40,000 merchant affiliate programs without the hassle of network sign ups, approvals or creating affiliate links.
 
-In order to allow our publishers to track traffic, and at the same time profit from the power of amp pages, we developed a link-rewrite generic component. `amp-digidip` allows digidip publishers to automatically turn their normal merchant links into monetizable links and access analytics on how their data is performing. As a generic extension for url rewriting, it covers a wide range of needs, that makes it also useful for other type of users.
+In order to allow our publishers to track traffic, and at the same time profit from the power of amp pages, we developed a link-rewrite generic component. `amp-link-rewriter` allows digidip publishers to automatically turn their normal merchant links into monetizable links and access analytics on how their data is performing. As a generic extension for url rewriting, it covers a wide range of needs, that makes it also useful for other type of users.
 
 ## Getting started
 
@@ -46,7 +46,7 @@ Inside the `<head>...</head>` section of your AMP page, insert this code before 
 
 Code:
 ```html
-    <script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-digidip-0.1.js"></script>
+    <script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js"></script>
 ```
 
 **Add the amp-digidip extension**
@@ -54,7 +54,7 @@ Inside the `<body>...</body>` section of your AMP page, insert this code:
 
 Code:
 ```html
-    <amp-digidip
+    <amp-lin-rewriter
         layout="nodisplay">
 
         <script type="application/json">
@@ -76,7 +76,7 @@ Code:
                 }
          </script>
 
-    </amp-digidip>
+    </amp-link-rewriter>
 ```
 
 
@@ -87,7 +87,7 @@ The final code should look like:
 <html ⚡>
 <head>
   ...
-  <script async custom-element="amp-digidip" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js"></script>
+  <script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js"></script>
   ...
   <script async src="https://cdn.ampproject.org/v0.js"></script>
 </head>
@@ -159,7 +159,7 @@ The config could be something like:
 ```
 The resulting, rewritten URL would be:
 ```url
-https://visit.digidip.net?eid=231&cid=12345
+`https://visit.digidip.net?eid=231&cid=12345`
 ```
 
 Besides defined placeholders that match the data defined in the 'vars' property of the JSON configuration, or as a data attribute, there are other pre-defined placeholders that will be shifted with information such as anchor url, page location, referrer page, or anchor id. The following table shows the relationship between defined data and placeholders.
@@ -187,7 +187,7 @@ Example:
         "output": "https://visit.digidip.net?pid=110&url=${href}&cid=${customerId}",
         "section": [
             "#product-listing-1",
-            "#product-listing-2",
+            "#product-listing-2"
         ]
     }
 ```
@@ -213,7 +213,7 @@ Example:
 ```
 
 The anchors within the html area with id 'product-listing-1' will have to match the regex expression defined for the attribute href and id.
-In this example, it means that all the anchors with 'youtube.com' and 'mobile.vodafone.de' will be excluded. Also, the included anchors need to have a class attribute with the value 'comments'   
+In this example, it means that all the anchors with `youtube.com` and 'mobile.vodafone.de' will be excluded. Also, the included anchors need to have a class attribute with the value 'comments'   
 
 
 ## Validation
