@@ -19,7 +19,7 @@ limitations under the License.
 <table>
   <tr>
     <td width="40%"><strong>Description</strong></td>
-    <td>Run digidip inside your AMP page</td>
+    <td>Run link-rewriter inside your AMP page</td>
   </tr>
   <tr>
     <td width="40%"><strong>Required Script</strong></td>
@@ -46,12 +46,12 @@ Code:
     <script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js`"></script>
 ```
 
-**Add the amp-digidip extension**
+**Add the amp-link-rewriter extension**
 Inside the `<body>...</body>` section of your AMP page, insert this code:
 
 Code:
 ```html
-    <amp-lin-rewriter
+    <amp-link-rewriter
         layout="nodisplay">
 
         <script type="application/json">

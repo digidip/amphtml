@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {LinkShifter} from '../link-shifter';
+import {LinkRewriter} from '../link-rewriter';
 import {getConfigOpts} from '../config-options';
 import {getScopeElements} from '../helper';
 import helpersMaker from './test-helpers';
@@ -68,14 +68,14 @@ describes.fakeWin('amp-link-rewriter', {
 
     const linkRewriterElement = helpers.createLinkRewriterElement(config);
 
-    const shifter = new LinkShifter(linkRewriterElement, null);
+    const rewriter = new LinkRewriter(linkRewriterElement, null);
     const anchorElement = document.createElement('a');
 
     anchorElement.href = 'http://example.com';
     anchorElement.rel = '235';
     anchorElement.setAttribute('data-vars-event-id', '567');
 
-    expect(shifter.replacePlaceHolders(anchorElement, pageAttributes))
+    expect(rewriter.replacePlaceHolders(anchorElement, pageAttributes))
         .to.equal('https://visit.digidip.net?pid=110&url=http%3A%2F%2Fexample.com&cid=&ref=http%3A%2F%2Fmydealz.com&location=http%3A%2F%2Fmydealz.com%2F123&rel=235&usr=12345&productId=567');
   });
 

@@ -23,7 +23,7 @@ import {
 } from './constants';
 import {getConfigOpts} from './config-options';
 
-export class LinkShifter {
+export class LinkRewriter {
   /**
    * @param {!AmpElement} ampElement
    * @param {?../../../src/service/viewer-impl.Viewer} viewer
