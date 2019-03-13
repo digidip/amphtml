@@ -67,7 +67,7 @@ export class LinkRewriter {
       return;
     }
 
-    this.setTrackingUrl_(htmlElement);
+    this.setRedirectUrl_(htmlElement);
   }
 
   /**
@@ -104,7 +104,7 @@ export class LinkRewriter {
    *
    * @param {?Element} htmlElement
    */
-  setTrackingUrl_(htmlElement) {
+  setRedirectUrl_(htmlElement) {
 
     const oldValHref = htmlElement.getAttribute('href');
 
