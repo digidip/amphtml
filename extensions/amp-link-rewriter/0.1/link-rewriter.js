@@ -17,18 +17,18 @@
 import {getConfigOpts} from './config-options';
 
 export const
-CTX_ATTR_NAME = 'shiftedctx',
-CTX_ATTR_VALUE = () => {
-    return Date.now();
-},
-WL_ANCHOR_ATTR = [
-    'href',
-    'id',
-    'rel',
-    'rev',
-],
-PREFIX_DATA_ATTR = 'vars',
-NS_DATA_PH = 'data.';
+    CTX_ATTR_NAME = 'shiftedctx',
+    CTX_ATTR_VALUE = () => {
+      return Date.now();
+    },
+    WL_ANCHOR_ATTR = [
+      'href',
+      'id',
+      'rel',
+      'rev',
+    ],
+    PREFIX_DATA_ATTR = 'vars',
+    NS_DATA_PH = 'data.';
 
 export class LinkRewriter {
   /**
