@@ -15,6 +15,7 @@
  */
 
 import {getConfigOpts} from './config-options';
+import {getDataParamsFromAttributes} from '../../../src/dom';
 
 export const
     CTX_ATTR_NAME = 'shiftedctx',
@@ -27,7 +28,7 @@ export const
       'rel',
       'rev',
     ],
-    PREFIX_DATA_ATTR = 'vars',
+    PREFIX_DATA_ATTR = /^vars(.+)/,
     NS_DATA_PH = 'data.';
 
 export class LinkRewriter {
@@ -42,6 +43,9 @@ export class LinkRewriter {
     /** @private {?Event} */
     this.event_ = null;
 
+    /** @private {?Array} */
+    this.eventsArray_ = [];
+
     /** @private {?Object} */
     this.configOpts_ = getConfigOpts(ampElement);
 
@@ -50,19 +54,33 @@ export class LinkRewriter {
 
     /** @private {?RegExp} */
     this.regexDomainUrl_ = /^https?:\/\/(www\.)?([^\/:]*)(:\d+)?(\/.*)?$/;
+
+    /** @private {?Object} */
+    this.vars_ = this.viewer_.getReferrerUrl().then(referrerUrl => {
+      const pageAttributes = {
+        referrer: referrerUrl,
+        location: this.viewer_.getResolvedViewerUrl(),
+      };
+
+      return Object.assign(pageAttributes, this.configOpts_.vars);
+    });
   }
 
   /**
    * @param {!Event} event
    */
   clickHandler(event) {
+    this.eventsArray_.push(event);
     this.event_ = event;
-    const htmlElement = event.srcElement;
+
+    const htmlElement = this.event_.srcElement;
+
     const trimmedDomain = this.viewer_.win.document.domain
         .replace(/(www\.)?(.*)/, '$2');
 
-    // avoid firefox to trigger the event twice (just caution)
-    if ((this.event_.type !== 'contextmenu') && (this.event_.button === 2)) {
+    // avoid to trigger the event twice
+    if (this.eventsArray_.length > 1 && !this.wasShifted_(htmlElement)) {
+      this.eventsArray = [];
       return;
     }
 
@@ -98,13 +116,8 @@ export class LinkRewriter {
   isInternalLink(htmlElement, trimmedDomain) {
     const href = htmlElement.getAttribute('href');
 
-    if (!(href && this.regexDomainUrl_.test(href) &&
-            RegExp.$2 !== trimmedDomain)
-    ) {
-      return true;
-    }
-
-    return false;
+    return !(href && this.regexDomainUrl_.test(href) &&
+            RegExp.$2 !== trimmedDomain);
   }
 
   /**
@@ -115,13 +128,8 @@ export class LinkRewriter {
 
     const oldValHref = htmlElement.getAttribute('href');
 
-    this.viewer_.getReferrerUrl().then(referrerUrl => {
-      const pageAttributes = {
-        referrer: referrerUrl,
-        location: this.viewer_.getResolvedViewerUrl(),
-      };
-
-      htmlElement.href = this.replacePlaceHolders(htmlElement, pageAttributes);
+    this.vars_.then(vars => {
+      htmlElement.href = this.replacePlaceHolders(htmlElement, vars);
 
       // If the link has been "activated" via contextmenu,
       // we have to keep the shifting in mind
@@ -138,87 +146,50 @@ export class LinkRewriter {
         }
 
       }, ((this.event_.type === 'contextmenu') ? 15000 : 500));
+
     });
   }
 
   /**
    * @param {?Element} htmlElement
-   * @param {!Object} pageAttributes
+   * @param {!Object} vars
    * @return {string}
    */
-  replacePlaceHolders(htmlElement, pageAttributes) {
-    const {vars} = this.configOpts_;
+  replacePlaceHolders(htmlElement, vars) {
     let {output} = this.configOpts_;
-    const data = {};
 
     /**
-     * Replace placeholders for anchor attributes
-     * defined in white list constant array
+     * Merge vars with attributes of the anchor element
      */
     WL_ANCHOR_ATTR.forEach(val => {
-      let attrValue = '';
-
       if (htmlElement.getAttribute(val)) {
-        attrValue = htmlElement.getAttribute(val);
+        vars[val] = htmlElement.getAttribute(val);
       }
-
-      output = output.replace('${' + val + '}', encodeURIComponent(attrValue));
     });
 
     /**
-     * Replace placeholders for properties of the document
-     * at the moment only referrer and location
-     */
-    Object.keys(pageAttributes).forEach(key => {
-      let propValue = '';
-
-      if (pageAttributes[key]) {
-        propValue = pageAttributes[key];
-      }
-
-      output = output.replace('${' + key + '}', encodeURIComponent(propValue));
-    });
-
-    /**
-     * Set on data object properties and values defined
-     * on 'vars config property'
-     */
-    Object.keys(vars).forEach(key => {
-      let confValue = '';
-
-      if (vars[key]) {
-        confValue = vars[key];
-      }
-
-      data[key] = confValue;
-    });
-
-    /**
-     * Set on data object properties and values set on the element
+     * Merge with vars object properties and values set on the element
      * 'data attributes' in case these have the save name that the
      * 'vars config property', 'data attributes' values will
      * overwrite 'vars config values'
      */
-    const {dataset} = htmlElement;
-    Object.keys(dataset).forEach(key => {
-      const dataValue = dataset[key];
-      let dataProp = key.split(PREFIX_DATA_ATTR)[1];
+    const dataset = getDataParamsFromAttributes(
+        htmlElement,
+        /* computeParamNameFunc */ undefined,
+        PREFIX_DATA_ATTR);
 
-      dataProp = dataProp.replace(/^[A-Z]/, match => {
-        return match.toLowerCase();
-      });
-
-      data[dataProp] = dataValue;
-    });
+    Object.assign(vars, dataset);
 
     /**
-     * Replace placeholders under data namespace for values merged of
-     * 'vars config property' and 'data attributes'
+     * Replace placeholders for properties of the document, anchor attributes
+     * and 'vars config property' all of them merged in vars
      */
-
-    Object.keys(data).forEach(key => {
-      const placeHoder = '${' + NS_DATA_PH + key + '}';
-      output = output.replace(placeHoder, encodeURIComponent(data[key]));
+    Object.keys(vars).forEach(key => {
+      if (vars[key]) {
+        output = output.replace(
+            '${' + key + '}',
+            encodeURIComponent(vars[key]));
+      }
     });
 
     /**
