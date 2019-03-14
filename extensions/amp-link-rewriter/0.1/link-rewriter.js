@@ -28,8 +28,7 @@ export const
       'rel',
       'rev',
     ],
-    PREFIX_DATA_ATTR = /^vars(.+)/,
-    NS_DATA_PH = 'data.';
+    PREFIX_DATA_ATTR = /^vars(.+)/;
 
 export class LinkRewriter {
   /**
@@ -43,6 +42,9 @@ export class LinkRewriter {
     /** @private {?Event} */
     this.event_ = null;
 
+    /** @public {?string} */
+    this.rewrittenUrl = '';
+
     /** @private {?Object} */
     this.configOpts_ = getConfigOpts(ampElement);
 
@@ -52,14 +54,16 @@ export class LinkRewriter {
     /** @private {?RegExp} */
     this.regexDomainUrl_ = /^https?:\/\/(www\.)?([^\/:]*)(:\d+)?(\/.*)?$/;
 
-    /** @private {?Object} */
+    /** @private {Promise<Object>} */
     this.vars_ = this.viewer_.getReferrerUrl().then(referrerUrl => {
       const pageAttributes = {
         referrer: referrerUrl,
         location: this.viewer_.getResolvedViewerUrl(),
       };
 
-      return Object.assign(pageAttributes, this.configOpts_.vars);
+      Object.assign(pageAttributes, this.configOpts_.vars);
+
+      return pageAttributes;
     });
   }
 
@@ -111,13 +115,13 @@ export class LinkRewriter {
   }
 
   /**
-   *
    * @param {?Element} htmlElement
+   * return {Promise}
    */
   setRedirectUrl_(htmlElement) {
     const oldValHref = htmlElement.getAttribute('href');
 
-    this.vars_.then(vars => {
+    return this.vars_.then(vars => {
       htmlElement.href = this.replacePlaceHolders(htmlElement, vars);
 
       // If the link has been "activated" via contextmenu,
@@ -189,6 +193,7 @@ export class LinkRewriter {
       return '';
     });
 
-    return output;
+    this.rewrittenUrl = output;
+    return this.rewrittenUrl;
   }
 }

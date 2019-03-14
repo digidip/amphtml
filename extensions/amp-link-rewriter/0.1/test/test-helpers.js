@@ -20,6 +20,7 @@ const helpersMaker = () => {
     createLinkRewriterElement(config) {
 
       const element = document.createElement('amp-link-rewriter');
+      element.setAttribute('layout', 'nodisplay');
 
       element.innerHTML = '<script type="application/json">' +
         JSON.stringify(config) +
