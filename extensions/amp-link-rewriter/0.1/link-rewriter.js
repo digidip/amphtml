@@ -43,9 +43,6 @@ export class LinkRewriter {
     /** @private {?Event} */
     this.event_ = null;
 
-    /** @private {?Array} */
-    this.eventsArray_ = [];
-
     /** @private {?Object} */
     this.configOpts_ = getConfigOpts(ampElement);
 
@@ -70,19 +67,12 @@ export class LinkRewriter {
    * @param {!Event} event
    */
   clickHandler(event) {
-    this.eventsArray_.push(event);
     this.event_ = event;
 
     const htmlElement = this.event_.srcElement;
 
     const trimmedDomain = this.viewer_.win.document.domain
         .replace(/(www\.)?(.*)/, '$2');
-
-    // avoid to trigger the event twice
-    if (this.eventsArray_.length > 1 && !this.wasShifted_(htmlElement)) {
-      this.eventsArray = [];
-      return;
-    }
 
     if (this.wasShifted_(htmlElement)) {
       return;
@@ -103,8 +93,8 @@ export class LinkRewriter {
    */
   wasShifted_(htmlElement) {
     const ctxAttrValue = this.ctxAttrValue_;
-    return (htmlElement.hasAttribute(CTX_ATTR_NAME)) &&
-        (htmlElement.getAttribute(CTX_ATTR_NAME) === ctxAttrValue);
+    return (htmlElement[CTX_ATTR_NAME]) &&
+        (htmlElement[CTX_ATTR_NAME] === ctxAttrValue);
   }
 
   /**
@@ -125,7 +115,6 @@ export class LinkRewriter {
    * @param {?Element} htmlElement
    */
   setRedirectUrl_(htmlElement) {
-
     const oldValHref = htmlElement.getAttribute('href');
 
     this.vars_.then(vars => {
@@ -135,14 +124,14 @@ export class LinkRewriter {
       // we have to keep the shifting in mind
       if (this.event_.type === 'contextmenu') {
         this.ctxAttrValue_ = CTX_ATTR_VALUE().toString();
-        htmlElement.setAttribute(CTX_ATTR_NAME, this.ctxAttrValue_);
+        htmlElement[CTX_ATTR_NAME] = this.ctxAttrValue_;
       }
 
       this.viewer_.win.setTimeout(() => {
         htmlElement.href = oldValHref;
 
-        if (htmlElement.hasAttribute(CTX_ATTR_NAME)) {
-          htmlElement.removeAttribute(CTX_ATTR_NAME);
+        if (htmlElement[CTX_ATTR_NAME]) {
+          htmlElement[CTX_ATTR_NAME] = null;
         }
 
       }, ((this.event_.type === 'contextmenu') ? 15000 : 500));
