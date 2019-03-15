@@ -26,8 +26,8 @@ export class AmpLinkRewriter extends AMP.BaseElement {
   constructor(element) {
     super(element);
 
-    /** @private {?../../../src/service/ampdoc-impl.AmpDoc} */
-    this.ampDoc_ = null;
+    /** @private {!../../../src/service/ampdoc-impl.AmpDoc} */
+    this.ampDoc_ = this.getAmpDoc();
 
     /** @private {?./link-rewriter.LinkRewriter} */
     this.rewriter_ = null;
@@ -41,9 +41,6 @@ export class AmpLinkRewriter extends AMP.BaseElement {
 
   /** @override */
   buildCallback() {
-
-    this.ampDoc_ = this.getAmpDoc();
-
     this.configOpts_ = getConfigOpts(this.element);
 
     return this.ampDoc_.whenBodyAvailable()

@@ -16,7 +16,6 @@
 
 import {EVENTS} from '../../../amp-skimlinks/0.1/link-rewriter/constants';
 import {LinkRewriter} from '../link-rewriter';
-import {Services} from '../../../../src/services';
 import {getConfigOpts} from '../config-options';
 import {getScopeElements} from '../scope';
 import helpersMaker from './test-helpers';

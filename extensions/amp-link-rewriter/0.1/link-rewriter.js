@@ -34,14 +34,14 @@ const REG_DOMAIN_URL = /^https?:\/\/(www\.)?([^\/:]*)(:\d+)?(\/.*)?$/;
 export class LinkRewriter {
   /**
    * @param {!AmpElement} ampElement
-   * @param {?../../../src/service/ampdoc-impl.AmpDoc} ampDoc
+   * @param {!../../../src/service/ampdoc-impl.AmpDoc} ampDoc
    */
   constructor(ampElement, ampDoc) {
-    /** @private {?../../../src/service/ampdoc-impl.AmpDoc} */
+    /** @private {!../../../src/service/ampdoc-impl.AmpDoc} */
     this.ampDoc_ = ampDoc;
 
-    /** @private @const {!../../../src/service/viewer-impl.Viewer} */
-    this.viewer_ = this.viewer_ = Services.viewerForDoc(this.ampDoc_);
+    /** @private {!../../../src/service/viewer-impl.Viewer} */
+    this.viewer_ = Services.viewerForDoc(this.ampDoc_);
 
     /** @private {?Event} */
     this.event_ = null;
