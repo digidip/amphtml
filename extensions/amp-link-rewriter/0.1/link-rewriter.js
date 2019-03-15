@@ -39,7 +39,7 @@ export class LinkRewriter {
     /** @private {?../../../src/service/ampdoc-impl.AmpDoc} */
     this.ampDoc_ = ampDoc;
 
-    /** @private {?../../../src/service/viewer-impl.Viewer} */
+    /** @private @const {!../../../src/service/viewer-impl.Viewer} */
     this.viewer_ = this.viewer_ = Services.viewerForDoc(this.ampDoc_);
 
     /** @private {?Event} */
