@@ -14,30 +14,33 @@
  * limitations under the License.
  */
 
+import {Services} from '../../../src/services';
 import {getConfigOpts} from './config-options';
 import {getDataParamsFromAttributes} from '../../../src/dom';
 
-export const
-    CTX_ATTR_NAME = 'shiftedctx',
-    CTX_ATTR_VALUE = () => {
-      return Date.now();
-    },
-    WL_ANCHOR_ATTR = [
-      'href',
-      'id',
-      'rel',
-      'rev',
-    ],
-    PREFIX_DATA_ATTR = /^vars(.+)/;
+const CTX_ATTR_NAME = 'shiftedctx';
+const CTX_ATTR_VALUE = () => {
+  return Date.now();
+};
+const WL_ANCHOR_ATTR = [
+  'href',
+  'id',
+  'rel',
+  'rev',
+];
+const PREFIX_DATA_ATTR = /^vars(.+)/;
 
 export class LinkRewriter {
   /**
    * @param {!AmpElement} ampElement
-   * @param {?../../../src/service/viewer-impl.Viewer} viewer
+   * @param {?../../../src/service/ampdoc-impl.AmpDoc} ampDoc
    */
-  constructor(ampElement, viewer) {
+  constructor(ampElement, ampDoc) {
+    /** @private {?../../../src/service/ampdoc-impl.AmpDoc} */
+    this.ampDoc_ = ampDoc;
+
     /** @private {?../../../src/service/viewer-impl.Viewer} */
-    this.viewer_ = viewer;
+    this.viewer_ = this.viewer_ = Services.viewerForDoc(this.ampDoc_);
 
     /** @private {?Event} */
     this.event_ = null;
@@ -58,7 +61,7 @@ export class LinkRewriter {
     this.vars_ = this.viewer_.getReferrerUrl().then(referrerUrl => {
       const pageAttributes = {
         referrer: referrerUrl,
-        location: this.viewer_.getResolvedViewerUrl(),
+        location: Services.documentInfoForDoc(ampDoc).sourceUrl,
       };
 
       Object.assign(pageAttributes, this.configOpts_.vars);
@@ -74,9 +77,12 @@ export class LinkRewriter {
     this.event_ = event;
 
     const htmlElement = this.event_.srcElement;
-
-    const trimmedDomain = this.viewer_.win.document.domain
-        .replace(/(www\.)?(.*)/, '$2');
+    const sourceTrimmedDomain = Services
+        .documentInfoForDoc(this.ampDoc_)
+        .sourceUrl.replace(/(www\.)?(.*)/, '$2');
+    const canonicalTrimmedDomain = Services
+        .documentInfoForDoc(this.ampDoc_)
+        .sourceUrl.replace(/(www\.)?(.*)/, '$2');
 
     if (!htmlElement) {
       return;
@@ -86,7 +92,8 @@ export class LinkRewriter {
       return;
     }
 
-    if (this.isInternalLink(htmlElement, trimmedDomain)) {
+    if (this.isInternalLink(htmlElement, sourceTrimmedDomain)
+      || this.isInternalLink(htmlElement, canonicalTrimmedDomain)) {
       return;
     }
 

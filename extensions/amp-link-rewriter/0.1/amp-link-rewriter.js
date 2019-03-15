@@ -29,9 +29,6 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     /** @private {?../../../src/service/ampdoc-impl.AmpDoc} */
     this.ampDoc_ = null;
 
-    /** @private {?../../../src/service/viewer-impl.Viewer} */
-    this.viewer_ = null;
-
     /** @private {?./link-rewriter.LinkRewriter} */
     this.rewriter_ = null;
 
@@ -46,7 +43,6 @@ export class AmpLinkRewriter extends AMP.BaseElement {
   buildCallback() {
 
     this.ampDoc_ = this.getAmpDoc();
-    this.viewer_ = Services.viewerForDoc(this.ampDoc_);
 
     this.configOpts_ = getConfigOpts(this.element);
 
@@ -60,7 +56,7 @@ export class AmpLinkRewriter extends AMP.BaseElement {
   letsRockIt_() {
     this.rewriter_ = new LinkRewriter(
         this.element,
-        this.viewer_);
+        this.ampDoc_);
 
     this.attachClickEvent_();
   }
