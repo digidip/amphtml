@@ -73,10 +73,8 @@ export class AmpLinkRewriter extends AMP.BaseElement {
 
       const navigation = Services.navigationForDoc(nodeElement);
       navigation.registerAnchorMutator((anchor, event) => {
-        this.rewriter_.clickHandler(event);
-      },
-      Priority.LINK_REWRITER_MANAGER);
-
+        this.rewriter_.handleClick(event);
+      }, Priority.LINK_REWRITER_MANAGER);
     });
 
     return true;

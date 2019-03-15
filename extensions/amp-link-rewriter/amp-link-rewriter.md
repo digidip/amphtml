@@ -167,6 +167,7 @@ Apart from vars defined in the *vars* property of the JSON configuration, or as 
 | href           | anchor     |    `<a href="https://amazon.com" />`                  |  `${href}`            
 | id             | anchor     |    `<a href="..." id="link" />`                       |  `${id}`              
 | location       | page       |    `https://www.pepper.com/`                          |  `${location}`        
+| random         | page       |    `Math.random().toString(32).substr(2)`             |  `${random}`
 | referrer       | page       |    `https://google.de/`                               |  `${referrer}`        
 | rel            | anchor     |    `<a href="..." rel="pass" />`                      |  `${rel}`             
 | rev            | anchor     |    `<a href="..." rev="author" />`                    |  `${rev}`             

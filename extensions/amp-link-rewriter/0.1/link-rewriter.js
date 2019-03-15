@@ -29,6 +29,7 @@ const WL_ANCHOR_ATTR = [
   'rev',
 ];
 const PREFIX_DATA_ATTR = /^vars(.+)/;
+const REG_DOMAIN_URL = /^https?:\/\/(www\.)?([^\/:]*)(:\d+)?(\/.*)?$/;
 
 export class LinkRewriter {
   /**
@@ -54,9 +55,6 @@ export class LinkRewriter {
     /** @private {boolean|number|string} */
     this.ctxAttrValue_ = CTX_ATTR_VALUE().toString();
 
-    /** @private {?RegExp} */
-    this.regexDomainUrl_ = /^https?:\/\/(www\.)?([^\/:]*)(:\d+)?(\/.*)?$/;
-
     /** @private {Promise<Object>} */
     this.vars_ = this.viewer_.getReferrerUrl().then(referrerUrl => {
       const pageAttributes = {
@@ -73,7 +71,7 @@ export class LinkRewriter {
   /**
    * @param {!Event} event
    */
-  clickHandler(event) {
+  handleClick(event) {
     this.event_ = event;
 
     const htmlElement = this.event_.srcElement;
@@ -88,12 +86,12 @@ export class LinkRewriter {
       return;
     }
 
-    if (this.wasShifted_(htmlElement)) {
+    if (this.isRewritten_(htmlElement)) {
       return;
     }
 
-    if (this.isInternalLink(htmlElement, sourceTrimmedDomain)
-      || this.isInternalLink(htmlElement, canonicalTrimmedDomain)) {
+    if (this.isInternalLink_(htmlElement, sourceTrimmedDomain)
+      || this.isInternalLink_(htmlElement, canonicalTrimmedDomain)) {
       return;
     }
 
@@ -106,10 +104,9 @@ export class LinkRewriter {
    * @return {boolean}
    * @private
    */
-  wasShifted_(htmlElement) {
-    const ctxAttrValue = this.ctxAttrValue_;
+  isRewritten_(htmlElement) {
     return (htmlElement[CTX_ATTR_NAME]) &&
-        (htmlElement[CTX_ATTR_NAME] === ctxAttrValue);
+        (htmlElement[CTX_ATTR_NAME] === this.ctxAttrValue_);
   }
 
   /**
@@ -118,10 +115,10 @@ export class LinkRewriter {
    * @param {?string} trimmedDomain
    * @return {boolean}
    */
-  isInternalLink(htmlElement, trimmedDomain) {
+  isInternalLink_(htmlElement, trimmedDomain) {
     const href = htmlElement.getAttribute('href');
 
-    return !(href && this.regexDomainUrl_.test(href) &&
+    return !(href && REG_DOMAIN_URL.test(href) &&
             RegExp.$2 !== trimmedDomain);
   }
 
@@ -134,7 +131,7 @@ export class LinkRewriter {
 
     return this.vars_.then(vars => {
       if (vars instanceof Object) {
-        htmlElement.href = this.replacePlaceHolders(htmlElement, vars);
+        htmlElement.href = this.replaceVars_(htmlElement, vars);
       }
 
       // If the link has been "activated" via contextmenu,
@@ -161,7 +158,7 @@ export class LinkRewriter {
    * @param {!Object} vars
    * @return {string}
    */
-  replacePlaceHolders(htmlElement, vars) {
+  replaceVars_(htmlElement, vars) {
     let {output} = this.configOpts_;
 
     /**
@@ -185,6 +182,9 @@ export class LinkRewriter {
         PREFIX_DATA_ATTR);
 
     Object.assign(vars, dataset);
+
+    /** add a random value to be use in the output pattern */
+    vars['random'] = Math.random().toString(32).substr(2);
 
     /**
      * Replace placeholders for properties of the document, anchor attributes
