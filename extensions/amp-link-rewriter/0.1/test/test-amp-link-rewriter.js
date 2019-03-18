@@ -83,7 +83,7 @@ describes.fakeWin('amp-link-rewriter', {
           .to.equal('https://visit.digidip.net?pid=110&url=http%3A%2F%2Fexample.com&cid=12345&ref=&location=http%3A%2F%2Fmydealz.com%2F123&rel=235&productId=567');
 
     }).then(() => done(), done);
-  });
+  }).timeout(10000);
 
   it('Should return the number of anchors that match the config', () => {
 
