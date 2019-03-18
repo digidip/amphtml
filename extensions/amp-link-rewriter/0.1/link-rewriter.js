@@ -31,8 +31,8 @@ const WL_ANCHOR_ATTR = [
 const PREFIX_DATA_ATTR = /^vars(.+)/;
 const REG_DOMAIN_URL = /^https?:\/\/(www\.)?([^\/:]*)(:\d+)?(\/.*)?$/;
 const PAGE_PROP_WHITELIST = {
-  '${location}': true,
-  '${referrer}': true,
+  'SOURCE_URL': true,
+  'DOCUMENT_REFERRER': true,
 };
 
 export class LinkRewriter {
@@ -49,14 +49,6 @@ export class LinkRewriter {
 
     /** @private {?Event} */
     this.event_ = null;
-
-    /** @private {!Object} */
-    this.pageProp_ = {
-      '${referrer}': '',
-      '${location}': encodeURIComponent(
-          Services.documentInfoForDoc(this.ampDoc_).sourceUrl
-      ),
-    };
 
     /** @private {?Object} */
     this.configOpts_ = getConfigOpts(ampElement);
@@ -162,20 +154,14 @@ export class LinkRewriter {
    * @return {Promise}
    */
   replacePageProp_() {
-    return this.viewer_.getReferrerUrl()
-        .then(referrerUrl => {
-          this.pageProp_['${referrer}'] = encodeURIComponent(referrerUrl);
+    return this.urlReplacementService_.expandStringAsync(
+        this.rewrittenUrl,
+        {},
+        PAGE_PROP_WHITELIST
+    ).then(value => {
+      this.rewrittenUrl = value;
 
-        }).then(() => {
-          return this.urlReplacementService_.expandStringAsync(
-              this.rewrittenUrl,
-              this.pageProp_,
-              PAGE_PROP_WHITELIST
-          ).then(value => {
-            this.rewrittenUrl = value;
-
-          });
-        });
+    });
   }
 
   /**
